@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>sar_planner</name>
+  <version>0.1.0</version>
+  <description>
+    SAR (Search and Rescue) planner.
+    Converts drone aerial images into digital maps and publishes global coverage paths.
+  </description>
+  <maintainer email="todo@todo.com">todo</maintainer>
+  <license>Apache-2.0</license>
+
+  <depend>rclpy</depend>
+  <depend>robot_interfaces</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+
+  <exec_depend>python3-yaml</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-matplotlib</exec_depend>
+  <exec_depend>python3-pil</exec_depend>
+  <exec_depend>python3-tk</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

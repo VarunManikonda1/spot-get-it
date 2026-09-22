@@ -1,0 +1,54 @@
+rl_locomotion_node:
+  ros__parameters:
+    model_path: "models/spotmicro_v6_3_1_model.onnx"
+
+    ik_profile: "shared_v1"
+
+    action_scale: 0.25
+    action_clip: 100.0
+
+    gait_period: 1.2
+    duty_factor: 0.58
+    step_height: 0.013
+    body_height: 0.170
+    robot_width: 0.15
+
+    phase_cmd_norm: 0.04
+    blend_cmd_norm: 0.04
+
+    vx_min: -0.03
+    vx_max: 0.15
+    vy_min: 0.0
+    vy_max: 0.0
+    wz_min: -0.20
+    wz_max: 0.20
+
+    max_stride_x: 0.070
+    max_stride_y: 0.035
+    shoulder_y_gain: 1.0
+    shoulder_ref_limit: 0.16
+
+    shared_step_height: [0.013, 0.013, 0.016, 0.016]
+    shared_default_foot_x: [-0.010, -0.010, -0.010, -0.010]
+    shared_default_foot_y: [0.0, 0.0, 0.0, 0.0]
+    shared_phase_offsets: [0.0, 0.5, 0.5, 0.0]
+    upper_link_x: 0.0
+    upper_link_z: 0.105
+    lower_link: 0.130
+
+    leg_origin_x: [0.093, 0.093, -0.093, -0.093]
+    leg_origin_y: [0.036, -0.036, 0.036, -0.036]
+    shoulder_sign: [1.0, -1.0, 1.0, -1.0]
+
+    recovery_gating_enabled: true
+    recovery_tilt_threshold_deg: 14.0
+    recovery_full_tilt_deg: 25.0
+    recovery_command_scale: 0.15
+    recovery_phase_scale: 0.1
+    recovery_action_scale: 0.35
+
+    default_joint_angles:
+      [0.0, -0.9263791118902657, 1.5314088540972293,
+       0.0, -0.9263791118902657, 1.5314088540972293,
+       0.0, -0.9263791118902657, 1.5314088540972293,
+       0.0, -0.9263791118902657, 1.5314088540972293]

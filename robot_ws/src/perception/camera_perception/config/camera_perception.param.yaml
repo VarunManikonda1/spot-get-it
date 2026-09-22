@@ -1,0 +1,12 @@
+camera_perception_node:
+  ros__parameters:
+    engine_path: "/home/jetson/models/best.engine"
+    conf_threshold: 0.7
+    iou_threshold: 0.45
+    infer_size: 480
+    show_preview: false      # true로 변경하면 bbox 미리보기 창 활성화
+    preview_width: 640
+    preview_height: 480
+    robot_id: "spot_01"      # 기기 식별자. 기기마다 다른 값 설정
+    confirm_frames: 5    # 탐지 확정 연속 프레임 수
+    dismiss_frames: 5    # 미탐지 확정 연속 프레임 수

@@ -1,0 +1,38 @@
+path_progress_tracker_node:
+  ros__parameters:
+    # path progress를 계산할 대상 로봇 ID.
+    robot_id: "spot_01"
+
+    # 현재는 mock global path를 입력으로 사용한다.
+    # 실제 global_path_manager를 사용할 때는 /planning/global_path/spot_01로 변경한다.
+    #global_path_topic: "/planning/mock_global_path/spot_01"
+    global_path_topic: "/planning/global_path/spot_01"
+
+    # 현재는 mock localization pose를 입력으로 사용한다.
+    # 실제 localization pose를 사용할 때는 /localization/pose로 변경한다.
+    #localization_pose_topic: "/localization/mock_pose"
+    localization_pose_topic: "/localization/pose"
+
+    # path progress 계산 결과 출력 토픽.
+    path_progress_topic: "/navigation/path_progress/spot_01"
+
+    # global path와 localization pose가 공유해야 하는 기준 frame.
+    map_frame: "mission_map"
+
+    # 현재 위치에서 global path를 몇 m 앞까지 보고 target waypoint를 선택할지 결정한다.
+    lookahead_distance_m: 0.5
+
+    # goal에 도착했다고 판단할 거리 기준.
+    #goal_tolerance_m: 0.3
+    goal_tolerance_m: 0.1
+
+    # nearest_index가 뒤로 튀는 것을 막기 위한 설정.
+    # 실제 로봇 전진 주행 검증에서는 false 유지 (중요)
+    #allow_backward_index_jump: false
+    allow_backward_index_jump: true
+
+    # localization pose가 이 시간 이상 갱신되지 않으면 pose_valid=false 처리.
+    pose_timeout_sec: 0.5
+
+    # PathProgress publish 주기.
+    publish_rate_hz: 10.0

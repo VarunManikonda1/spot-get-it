@@ -1,0 +1,46 @@
+# config/map.yaml
+# 시연장 맵 설정
+# 좌표계: 원점 좌측 하단 / +X 문 벽 방향 / +Y 단상 방향 / 단위 m
+
+map:
+  # 로봇별 출발 좌표
+  starts:
+    robot_01: [2.0, 2.0]
+    sim_02:   [2.0, 1.0]
+    sim_03:   [3.0, 1.0]
+    sim_04:   [3.0, 2.0]
+
+  # 공통 도착 좌표 (복도 입구 앞, 로비 안쪽)
+  end: [11.2, 7.0]
+
+  # 이동 가능 구역
+  lobby:
+    x_min: 0.3
+    x_max: 11.92
+    y_min: 0.3
+    y_max: 7.24
+
+  corridor_1:
+    x_min: 10.79
+    x_max: 11.62
+    y_min: 7.84
+    y_max: 11.24
+    z: 0.05
+
+  # 경유지 샘플링 범위 (현재 로비만 / 복도 추가 시 범위 확장)
+  waypoint_sampling:
+    x_min: 2.5
+    x_max: 11.0
+    x_step: 0.5
+    y_min: 1.0
+    y_max: 7.0
+    y_step: 0.5
+
+  # 장애물 목록 (맵 변경 시 yaml 수정 후 재빌드)
+  obstacles:
+    - id: stage
+      x_min: 0.0
+      x_max: 1.21
+      y_min: 0.74
+      y_max: 6.75
+      clearance: 0.30

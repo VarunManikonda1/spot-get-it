@@ -1,0 +1,43 @@
+path_follower_node:
+  ros__parameters:
+    # 로봇 식별자
+    robot_id: "spot_01"
+
+    # 토픽 이름
+    # topic_pose : 실제 pose 토픽 사용
+    topic_pose: "/localization/pose"
+
+    # 최대 전진 속도 (m/s) - 실측 기준
+    max_linear_x_mps: 0.10
+
+    # 최소 전진 속도 (m/s)
+    min_linear_x_mps: 0.05
+
+    # 최대 각속도 (rad/s)
+    max_angular_z_radps: 0.40
+
+    # heading error → 각속도 gain
+    # w = k_yaw * heading_error
+    k_yaw: 1.0
+
+    # 이 이내면 방향이 맞다고 판단
+    heading_tolerance_rad: 0.15
+
+    # 이 이상이면 전진하지 않고 제자리 회전
+    turn_in_place_threshold_rad: 0.7
+
+    # heading_error 기반 감속 시작 각도
+    # heading_error가 이 각도에 가까울수록 v 감소
+    slow_down_angle_rad: 0.5
+
+    # waypoint 도달 판단 거리 (m)
+    # 현재 위치와 target waypoint 거리가 이 이내면 다음 waypoint로 전진
+    waypoint_reach_tolerance_m: 0.2
+
+    # heading_error 틱당 최대 변화량 (rad)
+    # 보행 노이즈로 인한 yaw 튐 차단용
+    # 0.04 rad/tick (50Hz 기준), 실물 튜닝 필요
+    heading_error_rate_limit_rad: 0.04
+
+    # 제어 주기 (s) : 0.02 = 50Hz
+    timer_period_sec: 0.02

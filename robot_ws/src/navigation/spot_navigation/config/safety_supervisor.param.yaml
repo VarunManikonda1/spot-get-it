@@ -1,0 +1,51 @@
+safety_supervisor_node:
+  ros__parameters:
+    # 로봇 식별자
+    robot_id: "spot_01"
+
+    # 토픽 이름
+    # topic_pose : 실제 pose 토픽 사용
+    topic_pose: "/localization/pose"
+    topic_obstacle: "/perception/lidar/obstacle_model"
+    topic_free_space: "/perception/lidar/free_space_model"
+    topic_drive_mode: "/control/drive_mode/spot_01"
+
+    # 감속 시작 전방 거리 (m)
+    # front_clearance < soft_stop_distance_m → v 점진 감속
+    soft_stop_distance_m: 0.01
+
+    # 즉시 정지 전방 거리 (m)
+    # front_clearance < emergency_stop_distance_m → v=0, w=0 즉시
+    emergency_stop_distance_m: 0.01
+
+    # safety 통과 후 허용 최대 선속도 (m/s) - 실측 기준
+    max_safe_linear_x_mps: 0.10
+
+    # safety 통과 후 허용 최대 각속도 (rad/s)
+    max_safe_angular_z_radps: 0.40
+
+    # 선속도 최대 가속도 (m/s²) - 50Hz 기준 (10Hz 대비 5배)
+    max_linear_accel_mps2: 1.65
+
+    # 선속도 최대 감속도 (m/s²)
+    max_linear_decel_mps2: 0.20
+
+    # 각속도 최대 변화율 (rad/s²)
+    max_angular_accel_radps2: 1.0
+
+    # 전방 장애물 유효 방위각 한계 (rad)
+    # 이 각도 이내의 장애물만 전방 장애물로 판단
+    # 0.5236 rad = 30도 (front 섹터 절반)
+    front_azimuth_limit_rad: 0.5236
+
+    # cmd_vel_raw stale 판단 시간 (s)
+    cmd_timeout_sec: 0.30
+
+    # pose stale 판단 시간 (s)
+    pose_timeout_sec: 0.50
+
+    # perception stale 판단 시간 (s)
+    perception_timeout_sec: 0.50
+
+    # 제어 주기 (s) : 0.02 = 50Hz
+    timer_period_sec: 0.02

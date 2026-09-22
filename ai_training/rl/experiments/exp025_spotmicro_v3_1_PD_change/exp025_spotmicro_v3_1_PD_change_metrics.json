@@ -1,0 +1,30 @@
+{
+  "exp_id": 25,
+  "run_name": "spotmicro_v3_1_PD_change",
+  "purpose": "V3.1: urdf 변경으로 인한 변경점을 보정하기 위한 PD 변경.",
+  "timestamp": "2026-04-28T18:17:37.500055",
+  "metrics": {
+    "timeout_pct": 92.08633093525181,
+    "early_death_pct": 1.4388489208633095,
+    "vel_error_x": 0.04286655783653259,
+    "vel_error_y": 0.023275425657629967,
+    "ang_vel_error": 0.09977609664201736,
+    "torque_saturation_pct": 18.141927516927517,
+    "mean_height": 0.20283699806753572,
+    "height_std": 0.0026254919177075204,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.0229833876768422,
+    "mean_roll_deg": 1.2035466432571411,
+    "mean_pitch_deg": 2.6499929428100586,
+    "max_roll_deg": 5.539546012878418,
+    "max_pitch_deg": 4.989160060882568,
+    "mean_action_rate": 0.007829658687114716,
+    "max_action_rate": 1.9092274904251099,
+    "mean_power": 7.40646505355835,
+    "power_std": 2.15181827545166,
+    "cost_of_transport": 1.8189044266553605,
+    "mean_episode_length": 938.8992805755396,
+    "mean_episode_return": 67.2679907110312,
+    "num_episodes": 139
+  }
+}

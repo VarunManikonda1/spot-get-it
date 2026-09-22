@@ -1,0 +1,30 @@
+{
+  "exp_id": 30,
+  "run_name": "spotmicro_v3_3_ik_desc",
+  "purpose": "V3.3: IK 구조가 토크를 과도하게 먹는 구조인지 확인하기 위한 IK tracking reward 감소.",
+  "timestamp": "2026-04-29T14:45:50.668541",
+  "metrics": {
+    "timeout_pct": 94.81481481481482,
+    "early_death_pct": 1.4814814814814816,
+    "vel_error_x": 0.044202886521816254,
+    "vel_error_y": 0.019737381488084793,
+    "ang_vel_error": 0.07023651152849197,
+    "torque_saturation_pct": 24.749425921300926,
+    "mean_height": 0.20391321668039747,
+    "height_std": 0.002538857932880899,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.02068085664049741,
+    "mean_roll_deg": 1.2069333791732788,
+    "mean_pitch_deg": 2.7381296157836914,
+    "max_roll_deg": 4.794088363647461,
+    "max_pitch_deg": 4.9748125076293945,
+    "mean_action_rate": 0.009656516835093498,
+    "max_action_rate": 0.6639232039451599,
+    "mean_power": 9.31376838684082,
+    "power_std": 2.3910446166992188,
+    "cost_of_transport": 2.069441904637245,
+    "mean_episode_length": 958.8888888888889,
+    "mean_episode_return": 64.27029364219418,
+    "num_episodes": 135
+  }
+}

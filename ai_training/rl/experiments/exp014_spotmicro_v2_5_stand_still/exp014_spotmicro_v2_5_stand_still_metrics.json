@@ -1,0 +1,30 @@
+{
+  "exp_id": 14,
+  "run_name": "spotmicro_v2_5_stand_still",
+  "purpose": "V2.5: 속도 범위를 0.0 포함하는 범위로 수정, 가만히 있는 동작 학습시키기",
+  "timestamp": "2026-04-27T17:21:12.963322",
+  "metrics": {
+    "timeout_pct": 5.718954248366013,
+    "early_death_pct": 90.68627450980392,
+    "vel_error_x": 0.15575939416885376,
+    "vel_error_y": 0.05264030024409294,
+    "ang_vel_error": 0.4247061610221863,
+    "torque_saturation_pct": 31.00358842546343,
+    "mean_height": 0.20745891557409094,
+    "height_std": 0.002620087849434286,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.08166368906786266,
+    "mean_roll_deg": 3.764181137084961,
+    "mean_pitch_deg": 6.03154182434082,
+    "max_roll_deg": 7.229253768920898,
+    "max_pitch_deg": 9.491547584533691,
+    "mean_action_rate": 0.14210258424282074,
+    "max_action_rate": 11.385299682617188,
+    "mean_power": 16.574724197387695,
+    "power_std": 4.816256046295166,
+    "cost_of_transport": 3.3875463676212028,
+    "mean_episode_length": 83.48910675381264,
+    "mean_episode_return": 3.6291725742661094,
+    "num_episodes": 1836
+  }
+}

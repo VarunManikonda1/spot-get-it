@@ -1,0 +1,30 @@
+{
+  "exp_id": 40,
+  "run_name": "spotmicro_v4_4_pitch_z",
+  "purpose": "V4.5: IK를 좀 덜 공격적이게 변경, 추종도 낮춰서 토크 포화 해결 가능한지 확인",
+  "timestamp": "2026-05-06T18:20:08.410758",
+  "metrics": {
+    "timeout_pct": 74.85380116959064,
+    "early_death_pct": 4.093567251461988,
+    "vel_error_x": 0.03464725986123085,
+    "vel_error_y": 0.018982363864779472,
+    "ang_vel_error": 0.0767216607928276,
+    "torque_saturation_pct": 19.444531163281162,
+    "mean_height": 0.23164309298261737,
+    "height_std": 0.002594373005959988,
+    "height_target": 0.216,
+    "mean_vel_z_abs": 0.011657238982975398,
+    "mean_roll_deg": 1.65479576587677,
+    "mean_pitch_deg": 2.466804265975952,
+    "max_roll_deg": 12.655875205993652,
+    "max_pitch_deg": 12.77182388305664,
+    "mean_action_rate": 0.020864617079496384,
+    "max_action_rate": 0.3498202860355377,
+    "mean_power": 8.876529693603516,
+    "power_std": 1.6318098306655884,
+    "cost_of_transport": 2.0186113617396773,
+    "mean_episode_length": 776.0058479532164,
+    "mean_episode_return": 36.76412440775431,
+    "num_episodes": 171
+  }
+}

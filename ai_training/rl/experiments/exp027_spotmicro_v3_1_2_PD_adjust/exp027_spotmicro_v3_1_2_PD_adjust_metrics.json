@@ -1,0 +1,30 @@
+{
+  "exp_id": 27,
+  "run_name": "spotmicro_v3_1_2_PD_adjust",
+  "purpose": "V3.1.2: 수정했던 PD를 원복.",
+  "timestamp": "2026-04-29T10:38:05.959888",
+  "metrics": {
+    "timeout_pct": 92.08633093525181,
+    "early_death_pct": 4.316546762589928,
+    "vel_error_x": 0.04975736513733864,
+    "vel_error_y": 0.03407929092645645,
+    "ang_vel_error": 0.17507070302963257,
+    "torque_saturation_pct": 34.34473512598512,
+    "mean_height": 0.20135336509951346,
+    "height_std": 0.0031800214699521556,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.021645337562778807,
+    "mean_roll_deg": 1.4139759540557861,
+    "mean_pitch_deg": 3.035675287246704,
+    "max_roll_deg": 4.579348564147949,
+    "max_pitch_deg": 5.193901538848877,
+    "mean_action_rate": 0.02319229021668434,
+    "max_action_rate": 0.8073533177375793,
+    "mean_power": 12.15652847290039,
+    "power_std": 2.817251443862915,
+    "cost_of_transport": 2.62699489256603,
+    "mean_episode_length": 932.5323741007194,
+    "mean_episode_return": 55.8038066703853,
+    "num_episodes": 139
+  }
+}

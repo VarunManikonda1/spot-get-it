@@ -1,0 +1,11 @@
+video_collector_node:
+  ros__parameters:
+    robot_id: "spot_01"
+    output_root: "/home/jetson/data"
+    sensor_subdir: "video"
+    output_filename: ""          # 비워두면 {robot_id}_video.avi 로 자동 생성
+    session_index: 0             # 0이면 자동으로 다음 번호 선택, 1 이상이면 해당 번호 폴더에 저장
+    overwrite_existing: false
+    fps: 15
+    width: 480
+    height: 270

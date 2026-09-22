@@ -1,0 +1,26 @@
+# sim_executor.param.yaml
+# 위치: robot_ws/src/simulation/sim_executor/config/sim_executor.param.yaml
+
+sim_executor_node:
+  ros__parameters:
+
+    # ── 네트워크 ─────────────────────────────────────────────────────
+    rpi5_ip: "192.168.0.12"
+    bridge_port: 9000
+
+    # ── 영상 파일 경로 ───────────────────────────────────────────────
+    video_path_02: "/home/ubuntu/media/spot_02.mp4"
+    video_path_03: "/home/ubuntu/media/spot_03.mp4"
+
+    # ── robot_id (0-based) ───────────────────────────────────────────
+    udp_robot_id_02: 1
+    udp_robot_id_03: 2
+
+    # ── 경로 추종 ────────────────────────────────────────────────────
+    robot_speed_mps: 0.4
+    pose_send_hz: 10.0
+
+    # ── 영상 송출 ────────────────────────────────────────────────────
+    video_fps: 15
+    jpeg_quality: 80
+    max_size_bytes: 200000

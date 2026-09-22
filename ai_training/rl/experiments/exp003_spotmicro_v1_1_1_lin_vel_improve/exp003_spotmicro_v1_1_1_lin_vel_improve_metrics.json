@@ -1,0 +1,30 @@
+{
+  "exp_id": 3,
+  "run_name": "spotmicro_v1_1_1_lin_vel_improve",
+  "purpose": "V1.1.1: 직선속도 추종 정도는 유지하며 몸체의 흔들림 감소",
+  "timestamp": "2026-04-24T16:17:59.350230",
+  "metrics": {
+    "timeout_pct": 100.0,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.08248990029096603,
+    "vel_error_y": 0.024708250537514687,
+    "ang_vel_error": 0.0904223620891571,
+    "torque_saturation_pct": 14.159668456543455,
+    "mean_height": 0.21938748620983922,
+    "height_std": 0.001674374484374536,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.029619349548873155,
+    "mean_roll_deg": 2.059039354324341,
+    "mean_pitch_deg": 0.8953388333320618,
+    "max_roll_deg": 6.117594242095947,
+    "max_pitch_deg": 5.845032215118408,
+    "mean_action_rate": 0.003087573917582631,
+    "max_action_rate": 0.07668591290712357,
+    "mean_power": 7.906877040863037,
+    "power_std": 3.290146827697754,
+    "cost_of_transport": 1.5946281159127014,
+    "mean_episode_length": 1001.5,
+    "mean_episode_return": 72.33272767066956,
+    "num_episodes": 128
+  }
+}

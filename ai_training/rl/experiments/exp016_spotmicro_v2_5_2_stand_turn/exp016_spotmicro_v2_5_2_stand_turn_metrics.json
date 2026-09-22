@@ -1,0 +1,30 @@
+{
+  "exp_id": 16,
+  "run_name": "spotmicro_v2_5_2_stand_turn",
+  "purpose": "V2.5.2: 제자리에서 회전할 수 있도록 설정",
+  "timestamp": "2026-04-28T09:59:19.392079",
+  "metrics": {
+    "timeout_pct": 100.0,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.04548497125506401,
+    "vel_error_y": 0.025052888318896294,
+    "ang_vel_error": 0.11412515491247177,
+    "torque_saturation_pct": 15.933415542790543,
+    "mean_height": 0.2164964332476958,
+    "height_std": 0.0015975523471418232,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.015995373066185294,
+    "mean_roll_deg": 1.6662615537643433,
+    "mean_pitch_deg": 1.1945264339447021,
+    "max_roll_deg": 3.853303909301758,
+    "max_pitch_deg": 4.151369094848633,
+    "mean_action_rate": 0.005489966832101345,
+    "max_action_rate": 0.13765981793403625,
+    "mean_power": 7.8420491218566895,
+    "power_std": 2.082015037536621,
+    "cost_of_transport": 1.9060058132771582,
+    "mean_episode_length": 1001.5,
+    "mean_episode_return": 64.74177914857864,
+    "num_episodes": 128
+  }
+}

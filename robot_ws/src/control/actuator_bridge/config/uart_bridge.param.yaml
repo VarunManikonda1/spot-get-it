@@ -1,0 +1,31 @@
+actuator_bridge_node:
+  ros__parameters:
+    control_rate_hz: 50.0
+    max_target_age_ms: 1000.0
+    stale_disable_after_ms: 5000.0
+    freeze_seq_when_stale: true
+
+    # Jetson UART device는 실제 연결에 맞게 수정하세요.
+    # GPIO header UART 예: /dev/ttyTHS1
+    # USB-UART 예: /dev/ttyUSB0 또는 /dev/serial/by-id/...
+    uart_device: "/dev/ttyTHS1"
+    uart_baudrate: 921600
+    feedback_timeout_ms: 100.0
+    max_rx_buffer_size: 4096
+    status_transient_fail_limit: 15
+
+    target_topic: "/control/selected/joint_target"
+    cmd_vel_topic: "/control/cmd_vel/spot_01"
+    motion_state_deadband: 0.02
+
+    default_joint_angles:
+      [0.0, -0.9921237899157832, 1.4907337340120823,
+       0.0, -0.9921237899157832, 1.4907337340120823,
+       0.0, -0.9921237899157832, 1.4907337340120823,
+       0.0, -0.9921237899157832, 1.4907337340120823]
+
+    default_max_delta_rad:
+      [0.03, 0.03, 0.03,
+       0.03, 0.03, 0.03,
+       0.03, 0.03, 0.03,
+       0.03, 0.03, 0.03]

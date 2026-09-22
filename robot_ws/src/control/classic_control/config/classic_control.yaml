@@ -1,0 +1,81 @@
+classic_control_node:
+  ros__parameters:
+    rate_hz: 50.0
+    robot_id: "spot_01"
+
+    # Final navigation command from safety_supervisor_node.
+    cmd_vel_topic: "/control/cmd_vel/spot_01"
+    target_topic: "/control/classic_control/joint_target"
+    feedback_topic: "/control/actuator/joint_feedback"
+    active_mode_topic: "/control/behavior/active_mode"
+
+    command_timeout_sec: 0.35
+    linear_deadband_mps: 0.02
+    lateral_deadband_mps: 0.01
+    angular_deadband_radps: 0.03
+
+    vx_min_mps: -0.05
+    vx_max_mps: 0.20
+    vy_min_mps: -0.05
+    vy_max_mps: 0.05
+    wz_min_radps: -0.4
+    wz_max_radps: 0.4
+    max_linear_accel_mps2: 0.25
+    max_angular_accel_radps2: 0.7
+
+    # URDF IK model from spotmicro_test.urdf:
+    # shoulder -> leg: (0, +/-52, 0) mm
+    # leg -> foot: (10, 0, -120) mm
+    # foot -> toe sphere center: (0, 0, -115) mm, toe sphere radius 15 mm.
+    upper_link_x_mm: 10.0
+    upper_link_z_mm: 120.0
+    lower_link_mm: 115.0
+    toe_radius_mm: 15.0
+    body_height_mm: 190.0
+    body_height_mm_per_leg: [190.0, 190.0, 190.0, 190.0]
+    default_foot_x_mm: -40.0
+    default_foot_y_mm: 52.0
+    default_foot_y_mm_per_leg: [52.0, -52.0, 52.0, -52.0]
+
+    # Hip/shoulder origins in body frame, meters. Order: FL, FR, RL, RR.
+    leg_origin_x_m: [0.093, 0.093, -0.093, -0.093]
+    leg_origin_y_m: [0.036, -0.036, 0.036, -0.036]
+    shoulder_sign: [1.0, -1.0, 1.0, -1.0]
+    shoulder_offset_y_m: [0.052, -0.052, 0.052, -0.052]
+    shoulder_limit_rad: 0.548
+    phase_offsets: [0.0, 0.5, 0.5, 0.0]
+
+    gait_period_sec: 1.0
+    duty_factor: 0.58
+    lift_z_mm: 21.0
+    lift_z_mm_per_leg: [21.0, 21.0, 21.0, 21.0]
+    max_stride_x_mm: 85.0
+    max_stride_y_mm: 24.0
+    soft_stride_limit: true
+
+    stand_dwell_sec: 0.5
+    min_transition_sec: 2.0
+    max_transition_sec: 3.0
+    transition_sec_per_rad: 1.0
+    walk_start_stand_tolerance_rad: 0.08
+
+    max_delta_smooth_rad: 0.02
+    max_delta_walk_rad: 0.05
+    max_delta_walk_rad_per_joint: [
+      0.05, 0.05, 0.05,
+      0.05, 0.05, 0.05,
+      0.05, 0.05, 0.05,
+      0.05, 0.05, 0.05
+    ]
+
+    joint_min_rad:
+      [-0.548, -2.666, -0.100,
+       -0.548, -2.666, -0.100,
+       -0.548, -2.666, -0.100,
+       -0.548, -2.666, -0.100]
+
+    joint_max_rad:
+      [0.548, 1.548, 2.590,
+       0.548, 1.548, 2.590,
+       0.548, 1.548, 2.590,
+       0.548, 1.548, 2.590]

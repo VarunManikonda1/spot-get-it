@@ -1,0 +1,30 @@
+{
+  "exp_id": 38,
+  "run_name": "spotmicro_v4_3_body_height",
+  "purpose": "V4.3: IK의 body height를 낮춰 토크 포화 감소 시도",
+  "timestamp": "2026-05-04T16:52:01.679936",
+  "metrics": {
+    "timeout_pct": 49.6124031007752,
+    "early_death_pct": 50.0,
+    "vel_error_x": 0.03857134282588959,
+    "vel_error_y": 0.020504934713244438,
+    "ang_vel_error": 0.07386118918657303,
+    "torque_saturation_pct": 24.981528887778886,
+    "mean_height": 0.2089176920754013,
+    "height_std": 0.0019897751226830864,
+    "height_target": 0.195,
+    "mean_vel_z_abs": 0.02092299224958489,
+    "mean_roll_deg": 1.8599878549575806,
+    "mean_pitch_deg": 2.3180747032165527,
+    "max_roll_deg": 6.431728363037109,
+    "max_pitch_deg": 7.4738640785217285,
+    "mean_action_rate": 0.03463703393936157,
+    "max_action_rate": 0.649949848651886,
+    "mean_power": 8.273795127868652,
+    "power_std": 1.8618143796920776,
+    "cost_of_transport": 1.9054999084956548,
+    "mean_episode_length": 501.36046511627904,
+    "mean_episode_return": 26.4955934460542,
+    "num_episodes": 258
+  }
+}

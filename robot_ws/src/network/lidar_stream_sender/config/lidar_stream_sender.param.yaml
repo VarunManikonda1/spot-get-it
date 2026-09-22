@@ -1,0 +1,17 @@
+lidar_stream_sender_node:
+  ros__parameters:
+    # RPi BridgeDaemon IP (필수 - 실제 환경에 맞게 수정)
+    target_ip: "192.168.0.13"
+
+    # 로봇 ID (BridgeDaemon의 robot_id와 일치해야 함)
+    robot_id: 0
+
+    # 포인트 수 상한 (D1 최대: 160×60 = 9600)
+    max_pts: 500
+
+    # 유효 거리 필터 (단위: m)
+    min_dist_m: 0.05
+    max_dist_m: 2.0
+
+    # intensity 필드가 없을 때 사용할 기본값
+    default_intensity: 1.0

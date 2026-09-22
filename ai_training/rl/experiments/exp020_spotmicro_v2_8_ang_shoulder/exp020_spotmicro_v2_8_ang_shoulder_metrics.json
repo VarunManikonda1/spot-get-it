@@ -1,0 +1,30 @@
+{
+  "exp_id": 20,
+  "run_name": "spotmicro_v2_8_ang_shoulder",
+  "purpose": "V2.8: ik shoulder 관절 목표값 설정, 회전 오차 감소하는지 확인",
+  "timestamp": "2026-04-28T12:42:57.310526",
+  "metrics": {
+    "timeout_pct": 5.726660250240616,
+    "early_death_pct": 94.27333974975939,
+    "vel_error_x": 0.0772211104631424,
+    "vel_error_y": 0.03687449172139168,
+    "ang_vel_error": 0.231538325548172,
+    "torque_saturation_pct": 22.15523192085692,
+    "mean_height": 0.2161914959396079,
+    "height_std": 0.0015488023280657323,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.04667476992905289,
+    "mean_roll_deg": 2.1777641773223877,
+    "mean_pitch_deg": 1.689588189125061,
+    "max_roll_deg": 6.590978622436523,
+    "max_pitch_deg": 6.297967910766602,
+    "mean_action_rate": 0.03556104376912117,
+    "max_action_rate": 1.4798206090927124,
+    "mean_power": 13.399977684020996,
+    "power_std": 2.5276198387145996,
+    "cost_of_transport": 3.58791669345115,
+    "mean_episode_length": 64.09576515880654,
+    "mean_episode_return": 3.866216365359114,
+    "num_episodes": 2078
+  }
+}

@@ -1,0 +1,14 @@
+oak_camera_driver_node:
+  ros__parameters:
+    fps: 15                # 카메라 캡처 fps (encoded UDP 송신 fps와 동일)
+    image_raw_fps: 5       # image_raw publish fps (perception용, Jetson 부하 경감)
+    # image_raw bbox 좌표 정규화 기준 해상도
+    rgb_width: 480
+    rgb_height: 270
+    show_preview: false    # true로 변경하면 미리보기 창 활성화
+    preview_width: 480
+    preview_height: 270
+    # UDP 송신 설정
+    rpi_ip: "70.12.112.112"   # RPi BridgeDaemon IP (필수)
+    robot_id: 0               # BridgeDaemon robot_id와 일치해야 함
+    max_size_bytes: 200000    # 프레임 크기 상한 (bytes), 초과 시 skip

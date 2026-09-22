@@ -1,0 +1,30 @@
+{
+  "exp_id": 45,
+  "run_name": "spotmicro_v5_2_gait_period",
+  "purpose": "V5.2: gait period, feet height 조정",
+  "timestamp": "2026-05-11T17:45:46.993037",
+  "metrics": {
+    "timeout_pct": 81.52866242038218,
+    "early_death_pct": 2.547770700636943,
+    "vel_error_x": 0.1120615229010582,
+    "vel_error_y": 0.042947232723236084,
+    "ang_vel_error": 0.22921743988990784,
+    "torque_saturation_pct": 6.349683302808303,
+    "mean_height": 0.21938907879811306,
+    "height_std": 0.0016078302141001358,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.011679872407846506,
+    "mean_roll_deg": 2.3044285774230957,
+    "mean_pitch_deg": 2.3509929180145264,
+    "max_roll_deg": 6.246140003204346,
+    "max_pitch_deg": 6.756038665771484,
+    "mean_action_rate": 0.007228878792375326,
+    "max_action_rate": 0.42247819900512695,
+    "mean_power": 4.983323097229004,
+    "power_std": 1.6578943729400635,
+    "cost_of_transport": 4.767210733106457,
+    "mean_episode_length": 851.7388535031847,
+    "mean_episode_return": 46.60536649358121,
+    "num_episodes": 157
+  }
+}

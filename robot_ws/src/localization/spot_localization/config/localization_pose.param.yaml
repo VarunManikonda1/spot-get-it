@@ -1,0 +1,45 @@
+localization_pose_node:
+  ros__parameters:
+    # ==========================
+    # Output Topic
+    # ==========================
+
+    # 공통좌표계 기준 최종 Spot pose 출력 topic
+    pose_topic: "/localization/pose"
+
+    # ==========================
+    # Robot Metadata
+    # ==========================
+
+    # 관제 시스템에서 사용할 로봇 식별자
+    # 다중 로봇으로 확장할 경우 spot_01, spot_02처럼 구분
+    robot_id: "spot_01"
+
+    # ==========================
+    # TF Frames
+    # ==========================
+
+    # 공통좌표계 frame
+    mission_frame: "mission_map"
+
+    # pose를 조회할 로봇 몸체 frame
+    base_frame: "base_link"
+
+    # ==========================
+    # Publish / TF Lookup
+    # ==========================
+
+    # /localization/pose publish 주기 [Hz]
+    # gait odometry가 50Hz로 publish되므로, 관제/상위 계층용 pose는 30Hz부터 시작
+    # 더 부드러운 표시나 제어 입력이 필요하면 50Hz로 올릴 수 있음
+    publish_rate_hz: 50.0
+
+    # TF lookup timeout [s]
+    # 너무 길게 잡으면 timer callback이 오래 막힐 수 있으므로 짧게 설정
+    tf_lookup_timeout_s: 0.05
+
+    # TF 조회 실패 warning throttle 주기 [ms]
+    warning_throttle_ms: 2000
+
+    # publisher queue depth
+    pose_qos_depth: 10

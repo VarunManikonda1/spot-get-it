@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1050" viewBox="0 0 1600 1050">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#263238"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#1565c0"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#c62828"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#2e7d32"/>
+    </marker>
+    <style>
+      text { font-family: "Noto Sans CJK KR", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", Arial, sans-serif; fill: #263238; }
+      .title { font-size: 34px; font-weight: 800; }
+      .subtitle { font-size: 18px; fill: #546e7a; }
+      .section { font-size: 21px; font-weight: 800; fill: #263238; }
+      .boxTitle { font-size: 18px; font-weight: 800; }
+      .boxText { font-size: 14px; fill: #37474f; }
+      .tiny { font-size: 12px; fill: #455a64; }
+      .label { font-size: 13px; font-weight: 700; fill: #263238; }
+      .plane { fill: #f7f9fb; stroke: #90a4ae; stroke-width: 2; rx: 12; }
+      .jetson { fill: #e8f5e9; stroke: #43a047; stroke-width: 2; rx: 10; }
+      .qt { fill: #e3f2fd; stroke: #1e88e5; stroke-width: 2; rx: 10; }
+      .pc { fill: #fff8e1; stroke: #f9a825; stroke-width: 2; rx: 10; }
+      .module { fill: #ffffff; stroke: #607d8b; stroke-width: 1.7; rx: 8; }
+      .api { fill: #ede7f6; stroke: #5e35b1; stroke-width: 2; rx: 10; }
+      .shm { fill: #e0f2f1; stroke: #00897b; stroke-width: 2; rx: 10; }
+      .event { fill: #fce4ec; stroke: #ad1457; stroke-width: 2; rx: 10; }
+      .cmd { fill: #ffebee; stroke: #c62828; stroke-width: 2; rx: 10; }
+      .arrow { stroke: #263238; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+      .arrowBlue { stroke: #1565c0; stroke-width: 2.8; fill: none; marker-end: url(#arrowBlue); }
+      .arrowRed { stroke: #c62828; stroke-width: 2.8; fill: none; marker-end: url(#arrowRed); }
+      .arrowGreen { stroke: #2e7d32; stroke-width: 2.8; fill: none; marker-end: url(#arrowGreen); }
+      .dash { stroke-dasharray: 7 6; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="1050" fill="#fafafa"/>
+
+  <text x="60" y="58" class="title">BridgeDaemon + Qt GUI 전체 데이터 흐름</text>
+  <text x="60" y="88" class="subtitle">Sensor / State / Command / Event / Ops plane이 bridge_api와 SHM v2를 중심으로 연결되는 구조</text>
+
+  <!-- External systems -->
+  <rect x="60" y="145" width="250" height="250" class="jetson"/>
+  <text x="85" y="180" class="section">Jetson Robot #N</text>
+  <text x="85" y="215" class="boxText">센서 송신: UDP 9000</text>
+  <text x="85" y="240" class="boxText">Image / LiDAR fragments</text>
+  <text x="85" y="265" class="boxText">Odom packet</text>
+  <text x="85" y="290" class="boxText">Cmd ACK packet</text>
+  <text x="85" y="330" class="boxText">명령 수신: UDP 9001</text>
+  <text x="85" y="355" class="boxText">MOVE / STOP / ESTOP</text>
+
+  <rect x="60" y="620" width="250" height="195" class="pc"/>
+  <text x="85" y="655" class="section">Remote PC</text>
+  <text x="85" y="690" class="boxText">Command TX: UDP 9002</text>
+  <text x="85" y="715" class="boxText">Status RX: UDP 9002</text>
+  <text x="85" y="755" class="boxText">PcStatusPacketV2</text>
+  <text x="85" y="780" class="boxText">관제 / 테스트 / 원격 제어</text>
+
+  <rect x="1290" y="145" width="250" height="675" class="qt"/>
+  <text x="1315" y="180" class="section">Qt GUI</text>
+  <text x="1315" y="215" class="boxText">SHM attach</text>
+  <text x="1315" y="240" class="boxText">/robot_bridge_0..N</text>
+  <text x="1315" y="280" class="boxText">Image view</text>
+  <text x="1315" y="305" class="boxText">LiDAR 2D/3D view</text>
+  <text x="1315" y="330" class="boxText">Robot cards / 상태 패널</text>
+  <text x="1315" y="355" class="boxText">Event panel</text>
+  <line x1="1315" y1="390" x2="1515" y2="390" stroke="#90caf9" stroke-width="2"/>
+  <text x="1315" y="425" class="boxText">Command TX</text>
+  <text x="1315" y="450" class="boxText">SHM cmd_queue</text>
+  <text x="1315" y="475" class="boxText">/robot_bridge_N</text>
+  <text x="1315" y="520" class="boxText">CmdPacket</text>
+  <text x="1315" y="545" class="boxText">robot_id, cmd_type</text>
+  <text x="1315" y="570" class="boxText">vx, vy, omega, seq</text>
+
+  <!-- Bridge daemon boundary -->
+  <rect x="365" y="125" width="875" height="725" class="plane"/>
+  <text x="395" y="163" class="section">BridgeDaemon / Middleware</text>
+  <text x="395" y="190" class="tiny">단일 중계 프로그램이 아니라, GUI가 쓰는 통신 미들웨어 역할</text>
+
+  <!-- RX path -->
+  <rect x="405" y="225" width="185" height="105" class="module"/>
+  <text x="425" y="255" class="boxTitle">jetson_rx.c</text>
+  <text x="425" y="282" class="boxText">UDP:9000 수신</text>
+  <text x="425" y="305" class="boxText">header validation</text>
+
+  <rect x="625" y="225" width="185" height="105" class="module"/>
+  <text x="645" y="255" class="boxTitle">type dispatch</text>
+  <text x="645" y="282" class="boxText">ODOM / ACK</text>
+  <text x="645" y="305" class="boxText">IMAGE / LIDAR</text>
+
+  <rect x="845" y="225" width="185" height="105" class="module"/>
+  <text x="865" y="255" class="boxTitle">FragQueue</text>
+  <text x="865" y="282" class="boxText">mutex + condvar</text>
+  <text x="865" y="305" class="boxText">robot별 queue</text>
+
+  <rect x="1045" y="225" width="155" height="105" class="module"/>
+  <text x="1063" y="255" class="boxTitle">reassembly</text>
+  <text x="1063" y="282" class="boxText">fragment 조립</text>
+  <text x="1063" y="305" class="boxText">frame 검증</text>
+
+  <!-- API center -->
+  <rect x="650" y="410" width="305" height="185" class="api"/>
+  <text x="690" y="445" class="section">bridge_api.c / h</text>
+  <text x="680" y="480" class="boxText">공통 API Layer</text>
+  <text x="680" y="505" class="boxText">note_rx / update_odom</text>
+  <text x="680" y="530" class="boxText">send_command / handle_ack</text>
+  <text x="680" y="555" class="boxText">publish_event / snapshot_status</text>
+
+  <!-- SHM -->
+  <rect x="1005" y="390" width="205" height="245" class="shm"/>
+  <text x="1030" y="425" class="section">SharedData v2</text>
+  <text x="1030" y="462" class="boxText">SHM magic/version/size</text>
+  <text x="1030" y="487" class="boxText">Image slots + sem</text>
+  <text x="1030" y="512" class="boxText">LiDAR slots + sem</text>
+  <text x="1030" y="537" class="boxText">Odom rwlock</text>
+  <text x="1030" y="562" class="boxText">RobotState</text>
+  <text x="1030" y="587" class="boxText">EventLog ring</text>
+  <text x="1030" y="612" class="boxText">Metrics</text>
+
+  <!-- Command path -->
+  <rect x="405" y="650" width="185" height="115" class="cmd"/>
+  <text x="425" y="682" class="boxTitle">pc_link.c</text>
+  <text x="425" y="710" class="boxText">UDP:9002</text>
+  <text x="425" y="735" class="boxText">PC command/status</text>
+
+  <rect x="650" y="650" width="185" height="115" class="cmd"/>
+  <text x="670" y="682" class="boxTitle">jetson_tx.c</text>
+  <text x="670" y="710" class="boxText">SHM cmd_queue</text>
+  <text x="670" y="735" class="boxText">GUI command</text>
+
+  <rect x="895" y="650" width="185" height="115" class="cmd"/>
+  <text x="915" y="682" class="boxTitle">protocol_timer.c</text>
+  <text x="915" y="710" class="boxText">1Hz heartbeat</text>
+  <text x="915" y="735" class="boxText">ACK timeout/retry</text>
+
+  <rect x="405" y="410" width="185" height="130" class="event"/>
+  <text x="425" y="442" class="boxTitle">bridge_main.c</text>
+  <text x="425" y="470" class="boxText">SHM init</text>
+  <text x="425" y="495" class="boxText">thread start/join</text>
+  <text x="425" y="520" class="boxText">watchdog</text>
+
+  <!-- Data arrows -->
+  <path d="M310 225 C345 225, 360 260, 405 260" class="arrowGreen"/>
+  <text x="320" y="210" class="label">sensor/odom/ack UDP 9000</text>
+
+  <path d="M590 277 L625 277" class="arrow"/>
+  <path d="M810 277 L845 277" class="arrowGreen"/>
+  <path d="M1030 277 L1045 277" class="arrowGreen"/>
+
+  <path d="M1122 330 L1122 390" class="arrowGreen"/>
+  <text x="1132" y="365" class="label">frame publish</text>
+
+  <path d="M717 330 L755 410" class="arrowBlue"/>
+  <text x="640" y="370" class="label">odom / ack / rx metrics</text>
+
+  <path d="M955 502 L1005 502" class="arrowBlue"/>
+  <text x="960" y="486" class="label">state/event/metrics</text>
+
+  <path d="M1210 500 C1245 500, 1250 300, 1290 300" class="arrowBlue"/>
+  <text x="1220" y="285" class="label">SHM read: image/lidar/state/event</text>
+
+  <path d="M1290 515 C1200 515, 1190 705, 835 705" class="arrowRed"/>
+  <text x="1090" y="690" class="label">CmdPacket via SHM queue</text>
+
+  <path d="M310 705 L405 705" class="arrowRed"/>
+  <text x="315" y="690" class="label">PC command UDP 9002</text>
+
+  <path d="M590 705 L650 705" class="arrowRed dash"/>
+  <text x="598" y="690" class="label">same API</text>
+
+  <path d="M835 705 C870 705, 900 595, 805 595" class="arrowRed"/>
+  <path d="M987 650 C970 600, 940 560, 955 535" class="arrowRed"/>
+  <path d="M802 595 L802 595" class="arrowRed"/>
+
+  <path d="M650 705 C580 705, 565 590, 650 535" class="arrowRed"/>
+  <path d="M590 705 C600 635, 625 585, 650 535" class="arrowRed"/>
+  <path d="M1080 705 C1130 705, 1130 595, 955 535" class="arrowRed"/>
+
+  <path d="M650 505 C545 505, 530 395, 310 355" class="arrowRed"/>
+  <text x="320" y="382" class="label">command UDP 9001</text>
+
+  <path d="M650 555 C530 620, 505 650, 310 755" class="arrowBlue"/>
+  <text x="325" y="805" class="label">PcStatusPacketV2 UDP 9002</text>
+
+  <path d="M498 410 C560 360, 625 380, 650 440" class="arrowBlue"/>
+  <text x="455" y="385" class="label">watchdog event</text>
+
+  <!-- Plane legend -->
+  <rect x="60" y="895" width="1480" height="110" fill="#ffffff" stroke="#cfd8dc" stroke-width="2" rx="10"/>
+  <text x="85" y="930" class="section">Legend / 수업 포인트</text>
+  <circle cx="95" cy="960" r="7" fill="#2e7d32"/>
+  <text x="112" y="966" class="boxText">Sensor Plane: image/lidar fragment를 재조립해서 SHM triple buffer로 publish</text>
+  <circle cx="545" cy="960" r="7" fill="#1565c0"/>
+  <text x="562" y="966" class="boxText">State/Event/Ops Plane: RobotState, EventLog, Metrics를 API가 일관되게 갱신</text>
+  <circle cx="1040" cy="960" r="7" fill="#c62828"/>
+  <text x="1057" y="966" class="boxText">Command Plane: Qt/PC/Heartbeat가 같은 bridge_api_send_command 경로 사용</text>
+</svg>

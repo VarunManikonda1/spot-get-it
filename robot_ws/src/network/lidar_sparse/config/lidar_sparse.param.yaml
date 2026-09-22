@@ -1,0 +1,16 @@
+lidar_sparse_node:
+  ros__parameters:
+    # 거리 필터 (단위: m)
+    min_dist_m: 0.05
+    max_dist_m: 2.0
+
+    # 1단계: Voxel Grid 셀 크기 (m)
+    # 9600pts → ~300pts, numpy 벡터화라 빠름
+    voxel_pre_r: 0.08
+
+    # 2단계: Poisson Disk 최소 간격 (m)
+    # ~300pts → ~150pts, 공간 균일 분포 보장
+    poisson_r: 0.30
+
+    # 출력 포인트 상한
+    max_pts: 400

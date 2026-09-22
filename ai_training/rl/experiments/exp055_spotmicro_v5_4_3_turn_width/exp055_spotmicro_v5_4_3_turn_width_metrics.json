@@ -1,0 +1,30 @@
+{
+  "exp_id": 55,
+  "run_name": "spotmicro_v5_4_3_turn_width",
+  "purpose": "V5.4.3: half turn width parameter 추가",
+  "timestamp": "2026-05-12T16:47:23.899052",
+  "metrics": {
+    "timeout_pct": 27.292110874200425,
+    "early_death_pct": 72.06823027718549,
+    "vel_error_x": 0.0579286552965641,
+    "vel_error_y": 0.03357795998454094,
+    "ang_vel_error": 0.12230463325977325,
+    "torque_saturation_pct": 17.731357184482185,
+    "mean_height": 0.21016074346872793,
+    "height_std": 0.0027365258763784204,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.022855401306524064,
+    "mean_roll_deg": 1.7328935861587524,
+    "mean_pitch_deg": 2.162623405456543,
+    "max_roll_deg": 4.6152663230896,
+    "max_pitch_deg": 4.630970001220703,
+    "mean_action_rate": 0.015968529507517815,
+    "max_action_rate": 2.308302879333496,
+    "mean_power": 7.178871154785156,
+    "power_std": 2.4015707969665527,
+    "cost_of_transport": 2.6172927405169104,
+    "mean_episode_length": 278.1727078891258,
+    "mean_episode_return": 18.354494853950005,
+    "num_episodes": 469
+  }
+}

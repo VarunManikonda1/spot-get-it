@@ -1,0 +1,30 @@
+{
+  "exp_id": 31,
+  "run_name": "spotmicro_v3_3_1_torque_improve",
+  "purpose": "V3.3.1: torque 페널티 증가시켜 leg, foot 토크 완화 시도.",
+  "timestamp": "2026-04-29T15:23:14.547011",
+  "metrics": {
+    "timeout_pct": 96.96969696969697,
+    "early_death_pct": 2.272727272727273,
+    "vel_error_x": 0.046864572912454605,
+    "vel_error_y": 0.021360648795962334,
+    "ang_vel_error": 0.0691101998090744,
+    "torque_saturation_pct": 19.199853965478965,
+    "mean_height": 0.20669517683716881,
+    "height_std": 0.002464668159122639,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.024700860463732825,
+    "mean_roll_deg": 1.9351392984390259,
+    "mean_pitch_deg": 1.8052961826324463,
+    "max_roll_deg": 6.171072006225586,
+    "max_pitch_deg": 5.437282562255859,
+    "mean_action_rate": 0.004179686773568392,
+    "max_action_rate": 0.4219832718372345,
+    "mean_power": 8.369754791259766,
+    "power_std": 2.469115972518921,
+    "cost_of_transport": 1.9529956895947596,
+    "mean_episode_length": 975.5757575757576,
+    "mean_episode_return": 71.1862009397962,
+    "num_episodes": 132
+  }
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>spot_localization</name>
+  <version>0.0.0</version>
+  <description>Gait-based localization package for Spot Micro robot.</description>
+  <maintainer email="aaxz000@gmail.com">bw522</maintainer>
+  <license>TODO: License declaration</license>
+
+  <!-- ========================================================= -->
+  <!-- Build tool                                                -->
+  <!-- ========================================================= -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- ========================================================= -->
+  <!-- Runtime / build dependencies                              -->
+  <!-- ========================================================= -->
+  <!-- ROS 2 C++ node 작성 -->
+  <depend>rclcpp</depend>
+
+  <!-- StmMotion.msg 사용 -->
+  <depend>robot_interfaces</depend>
+
+  <!-- /localization/odometry publish -->
+  <depend>nav_msgs</depend>
+
+  <!-- TransformStamped, Quaternion 사용 -->
+  <depend>geometry_msgs</depend>
+
+  <!-- odom -> base_link TF publish -->
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+
+  <!-- ========================================================= -->
+  <!-- Launch dependencies                                       -->
+  <!-- ========================================================= -->
+  <!-- ros2 launch 실행 및 launch_ros Node action 사용 -->
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <!-- ========================================================= -->
+  <!-- Test dependencies                                         -->
+  <!-- ========================================================= -->
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

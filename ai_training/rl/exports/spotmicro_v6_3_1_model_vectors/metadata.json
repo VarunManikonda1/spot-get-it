@@ -1,0 +1,13 @@
+{
+  "task": "spotmicro_test",
+  "checkpoint": "/home/jyk/SPOT_GET_IT/ai_training/rl/legged_gym/logs/spotmicro_test/May25_16-41-52_spotmicro_v6_3_1_prefall_transition_tilt_sampler_soft/model_8100.pt",
+  "onnx": "/home/jyk/SPOT_GET_IT/ai_training/rl/exports/spotmicro_v6_3_1_model.onnx",
+  "obs_dim": 47,
+  "action_dim": 12,
+  "num_vectors": 128,
+  "obs_dtype": "float32",
+  "action_dtype": "float32",
+  "input_name": "obs",
+  "output_name": "action",
+  "note": "test_action is raw PyTorch actor output before ROS2 action clipping/postprocess."
+}

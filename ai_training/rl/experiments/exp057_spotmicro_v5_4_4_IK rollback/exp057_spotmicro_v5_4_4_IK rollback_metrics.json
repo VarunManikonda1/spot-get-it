@@ -1,0 +1,30 @@
+{
+  "exp_id": 57,
+  "run_name": "spotmicro_v5_4_4_IK rollback",
+  "purpose": "V5.4.4.1: IK rollback 후 각 체크포인트마다 확인 - 700iter",
+  "timestamp": "2026-05-13T10:00:16.717044",
+  "metrics": {
+    "timeout_pct": 95.52238805970148,
+    "early_death_pct": 2.2388059701492535,
+    "vel_error_x": 0.048460960388183594,
+    "vel_error_y": 0.024400271475315094,
+    "ang_vel_error": 0.08918021619319916,
+    "torque_saturation_pct": 14.584807553557551,
+    "mean_height": 0.21025039981573057,
+    "height_std": 0.002392086336751355,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.01819492252578652,
+    "mean_roll_deg": 1.2829399108886719,
+    "mean_pitch_deg": 1.512799859046936,
+    "max_roll_deg": 6.007946968078613,
+    "max_pitch_deg": 6.2509379386901855,
+    "mean_action_rate": 0.004863184876739979,
+    "max_action_rate": 0.24649304151535034,
+    "mean_power": 5.971581935882568,
+    "power_std": 1.2913964986801147,
+    "cost_of_transport": 1.9738602300270403,
+    "mean_episode_length": 963.2985074626865,
+    "mean_episode_return": 68.40757568447448,
+    "num_episodes": 134
+  }
+}

@@ -1,0 +1,46 @@
+navigation_fsm_node:
+  ros__parameters:
+    # 로봇 식별자
+    robot_id: "spot_01"
+
+    # 토픽 이름
+    # topic_pose : 실제 pose 토픽 사용
+    topic_pose: "/localization/pose"
+    topic_obstacle: "/perception/lidar/obstacle_model"
+    topic_free_space: "/perception/lidar/free_space_model"
+
+    # 전방 장애물 판단 거리 (m)
+    # front_clearance < front_block_distance_m → front_blocked = true
+    front_block_distance_m: 0.01  # 0.70
+
+    # 좌/우 장애물 판단 거리 (m)
+    side_block_distance_m: 0.50
+
+    # 전방 clear 복귀 판단 거리 (m)
+    # hysteresis : front_clear_distance_m > front_block_distance_m
+    front_clear_distance_m: 0.85
+
+    # clear 상태가 몇 초 유지되어야 blocked 해제로 볼지 (s)
+    clear_hold_time_sec: 0.5
+
+    # global path 복귀 판단 거리 (m)
+    # distance_to_nearest_m < rejoin_tolerance_m → NAV_REJOINING_GLOBAL_PATH
+    rejoin_tolerance_m: 0.30
+
+    # pose stale 판단 시간 (s)
+    pose_timeout_sec: 0.5
+
+    # perception stale 판단 시간 (s)
+    perception_timeout_sec: 0.5
+
+    # 즉시 정지 판단 거리 (m)
+    # front_clearance < emergency_stop_distance_m → NAV_EMERGENCY_STOP
+    emergency_stop_distance_m: 0.01 # 0.30
+
+    # 전방 장애물 유효 방위각 한계 (rad)
+    # 이 각도 이내의 장애물만 전방 장애물로 판단
+    # 0.5236 rad = 30도 (front 섹터 절반)
+    front_azimuth_limit_rad: 0.5236
+
+    # FSM 판단 주기 (s) : 0.02 = 50Hz
+    timer_period_sec: 0.02

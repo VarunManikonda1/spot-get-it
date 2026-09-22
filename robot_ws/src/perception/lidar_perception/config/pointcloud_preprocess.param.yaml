@@ -1,0 +1,25 @@
+pointcloud_preprocess_node:
+  ros__parameters:
+    # 최종적으로 Spot 기준으로 해석할 것이므로 target_frame은 base_link
+    target_frame: "base_link"
+
+    # ROI 범위 (x, y, z) = (전방, 좌우, 높이) 제한 [m]
+    # 앞뒤 범위
+    roi_min_x: 0.1    # 0.35
+    roi_max_x: 1.5
+
+    # 좌우 범위
+    roi_min_y: -2.0   # 왼쪽 1m
+    roi_max_y:  2.0   # 오른쪽 1m
+
+    # 상하 범위
+    roi_min_z: 0.05   # 지면 5cm 위 부터 인식
+    roi_max_z: 1.0
+
+    # Voxel downsampling leaf size [m]
+    voxel_leaf_size: 0.03
+
+    # Invalid point filtering
+    remove_invalid_points: true
+    remove_zero_points: true
+    zero_point_epsilon: 0.000001

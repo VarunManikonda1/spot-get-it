@@ -1,0 +1,30 @@
+{
+  "exp_id": 7,
+  "run_name": "spotmicro_v2_0_DR_friction",
+  "purpose": "V2.0: 도메인 랜덤화 적용. 우선 지면 마찰계수만 적용",
+  "timestamp": "2026-04-27T11:02:46.747782",
+  "metrics": {
+    "timeout_pct": 100.0,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.06864430010318756,
+    "vel_error_y": 0.01955048181116581,
+    "ang_vel_error": 0.0987924262881279,
+    "torque_saturation_pct": 12.781012390387392,
+    "mean_height": 0.21990395080554972,
+    "height_std": 0.0016610971368249442,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.03282883666401318,
+    "mean_roll_deg": 0.9798154234886169,
+    "mean_pitch_deg": 0.8534088730812073,
+    "max_roll_deg": 2.5307493209838867,
+    "max_pitch_deg": 4.646958827972412,
+    "mean_action_rate": 0.00307936011813581,
+    "max_action_rate": 0.1455908566713333,
+    "mean_power": 7.881471157073975,
+    "power_std": 2.6373610496520996,
+    "cost_of_transport": 1.4829569099054856,
+    "mean_episode_length": 1001.5,
+    "mean_episode_return": 71.2085947394371,
+    "num_episodes": 128
+  }
+}

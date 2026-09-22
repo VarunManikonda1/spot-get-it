@@ -1,0 +1,115 @@
+stand_motion_node:
+  ros__parameters:
+    rate_hz: 50.0
+
+    # 0.03 rad/step at 50Hz = 1.5 rad/s
+    max_delta_rad: 0.03
+
+    # CLASSIC mode에서 cmd_vel=0일 때의 기본 자세.
+    stand_pose:
+      - 0.0
+      - -0.9921237899157832
+      - 1.4907337340120823
+      - 0.0
+      - -0.9921237899157832
+      - 1.4907337340120823
+      - 0.0
+      - -0.9921237899157832
+      - 1.4907337340120823
+      - 0.0
+      - -0.9921237899157832
+      - 1.4907337340120823
+
+sit_motion_node:
+  ros__parameters:
+    rate_hz: 50.0
+
+    # 0.02 rad/step at 50Hz = 1.0 rad/s
+    max_delta_rad: 0.02
+    transition_sec: 2.0
+    feedback_timeout_sec: 0.5
+
+    stand_pose:
+      - 0.0
+      - -0.9921237899157832
+      - 1.4907337340120823
+      - 0.0
+      - -0.9921237899157832
+      - 1.4907337340120823
+      - 0.0
+      - -0.9921237899157832
+      - 1.4907337340120823
+      - 0.0
+      - -0.9921237899157832
+      - 1.4907337340120823
+
+    # Joint order: FL, FR, RL, RR.
+    # 앞다리는 살짝 접고 뒷다리는 낮게 접은 기본 앉은 자세.
+    sit_pose:
+      - 0.0
+      - -0.700000
+      - 2.250000
+      - 0.0
+      - -0.700000
+      - 2.250000
+      - 0.0
+      - -0.700000
+      - 2.250000
+      - 0.0
+      - -0.700000
+      - 2.250000
+
+detect_motion_node:
+  ros__parameters:
+    rate_hz: 50.0
+
+    # DETECT 진입 후 현재 joint feedback 자세에서 앉은 자세로 이동한 뒤 인사한다.
+    sit_transition_sec: 3.0
+    sit_skip_tolerance_rad: 0.08
+    raise_transition_sec: 1.2
+    wave_segment_sec: 0.75
+    wave_cycles: 3
+
+    sit_max_delta_rad: 0.015
+    raise_max_delta_rad: 0.02
+    wave_max_delta_rad: 0.02
+
+    sit_pose:
+      [0.0, -0.700000, 2.250000,
+       0.0, -0.700000, 2.250000,
+       0.0, -0.700000, 2.250000,
+       0.0, -0.700000, 2.250000]
+
+    # Joint order: FL, FR, RL, RR.
+    # Rear legs crouch low. FL stays extended as a front support while FR is lifted.
+    right_front_raised_pose:
+      [-0.120000, -0.720000, 1.050000,
+       0.0, 1.100000, 1.550000,
+       0.120000, -1.500000, 2.250000,
+       0.120000, -1.500000, 2.250000]
+
+    right_front_calf_wave_pose:
+      [-0.120000, -0.720000, 1.050000,
+       0.0, 1.100000, 2.150000,
+       0.120000, -1.500000, 2.250000,
+       0.120000, -1.500000, 2.250000]
+
+joint_target_mux_node:
+  ros__parameters:
+    rate_hz: 50.0
+
+    # 안전 default — launch 직후 robot 은 sit pose 를 유지.
+    # RL/classic/detect 노드는 띄워져 있어도 선택된 mode가 아니면 mux 에서 무시됨.
+    # Runtime command는 mux만 구독하고, mux가 /control/behavior/active_mode를 publish한다.
+    #   ros2 topic pub /control/behavior/mode std_msgs/msg/String "data: 'RL'" --once
+    #   ros2 topic pub /control/behavior/mode std_msgs/msg/String "data: 'CLASSIC'" --once
+    #   ros2 topic pub /control/behavior/mode std_msgs/msg/String "data: 'STAND'" --once
+    #   ros2 topic pub /control/behavior/mode std_msgs/msg/String "data: 'SIT'" --once
+    #   ros2 topic pub /control/behavior/mode std_msgs/msg/String "data: 'DETECT'" --once
+    default_mode: "SIT"
+
+    rl_timeout_ms: 100.0
+    classic_timeout_ms: 100.0
+    stand_timeout_ms: 100.0
+    sit_timeout_ms: 100.0
+    detect_timeout_ms: 100.0

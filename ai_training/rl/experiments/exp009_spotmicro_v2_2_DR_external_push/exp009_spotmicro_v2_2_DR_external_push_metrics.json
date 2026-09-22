@@ -1,0 +1,30 @@
+{
+  "exp_id": 9,
+  "run_name": "spotmicro_v2_2_DR_external_push",
+  "purpose": "V2.2: 외부의 충격량 적용.",
+  "timestamp": "2026-04-27T11:59:29.131723",
+  "metrics": {
+    "timeout_pct": 100.0,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.06971453875303268,
+    "vel_error_y": 0.021179700270295143,
+    "ang_vel_error": 0.1001272052526474,
+    "torque_saturation_pct": 14.399229242979244,
+    "mean_height": 0.21967423891092275,
+    "height_std": 0.0016851938806843939,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.032017100016045054,
+    "mean_roll_deg": 0.7260104417800903,
+    "mean_pitch_deg": 0.9553527235984802,
+    "max_roll_deg": 2.311415195465088,
+    "max_pitch_deg": 5.558380603790283,
+    "mean_action_rate": 0.0034509366378188133,
+    "max_action_rate": 0.0986718162894249,
+    "mean_power": 8.121528625488281,
+    "power_std": 2.6237940788269043,
+    "cost_of_transport": 1.5304421399621164,
+    "mean_episode_length": 1001.5,
+    "mean_episode_return": 70.88018107414246,
+    "num_episodes": 128
+  }
+}

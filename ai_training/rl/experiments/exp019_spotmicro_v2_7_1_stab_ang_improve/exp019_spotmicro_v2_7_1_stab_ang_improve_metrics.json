@@ -1,0 +1,30 @@
+{
+  "exp_id": 19,
+  "run_name": "spotmicro_v2_7_1_stab_ang_improve",
+  "purpose": "V2.7.1: 나빠진 안정성, 각속도 오차 성능 향상, iteration 늘림",
+  "timestamp": "2026-04-28T11:54:45.770673",
+  "metrics": {
+    "timeout_pct": 100.0,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.04712238162755966,
+    "vel_error_y": 0.02485625259578228,
+    "ang_vel_error": 0.10333861410617828,
+    "torque_saturation_pct": 18.05616258741259,
+    "mean_height": 0.2154177639222804,
+    "height_std": 0.0017617229090414132,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.017301050772801828,
+    "mean_roll_deg": 1.4527863264083862,
+    "mean_pitch_deg": 1.45259690284729,
+    "max_roll_deg": 5.062197208404541,
+    "max_pitch_deg": 5.562359809875488,
+    "mean_action_rate": 0.005825397092849016,
+    "max_action_rate": 0.5770062804222107,
+    "mean_power": 8.121455192565918,
+    "power_std": 2.3175010681152344,
+    "cost_of_transport": 1.7713017343660813,
+    "mean_episode_length": 1001.5,
+    "mean_episode_return": 69.43457410670817,
+    "num_episodes": 128
+  }
+}

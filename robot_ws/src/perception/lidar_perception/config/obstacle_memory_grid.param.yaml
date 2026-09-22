@@ -1,0 +1,42 @@
+obstacle_memory_grid_node:
+  ros__parameters:
+    # 입력 토픽
+    input_local_grid_topic: "/perception/lidar/local_occupancy_grid"
+    localization_pose_topic: "/localization/pose"
+
+    # 출력 토픽
+    output_memory_grid_topic: "/perception/lidar/obstacle_memory_grid"
+
+    # frame 설정
+    input_grid_frame: "base_link"
+    memory_frame: "mission_map"
+
+    # memory grid 해상도
+    # local_occupancy_grid와 맞추면 fusion 단계에서 다루기 쉬움
+    memory_resolution: 0.10
+
+    # RViz와 후속 fusion을 위해 publish할 mission_map 기준 rolling window 크기
+    # 실제 memory 저장소는 sparse map이고, publish만 현재 로봇 주변 window로 한다.
+    # local occupancy grid와 규격을 동일 시 하고 싶다면(x: 4.5, y: 5.0)
+    publish_size_x: 8.0
+    publish_size_y: 8.0
+
+    # occupied cell 기억 유지 시간
+    obstacle_memory_ttl_sec: 5
+
+    # 입력 pose가 너무 오래되면 memory 갱신 중단
+    pose_timeout_sec: 0.5
+
+    # cell value
+    unknown_value: -1
+    free_value: 0
+    occupied_value: 100
+
+    # local occupancy grid에서 occupied로 판단할 threshold
+    occupied_threshold: 50
+
+    # local occupancy grid가 이미 inflation된 상태이므로 초기에는 0.0 추천
+    memory_inflation_radius: 0.0
+
+    # 디버그 로그
+    debug_log: true

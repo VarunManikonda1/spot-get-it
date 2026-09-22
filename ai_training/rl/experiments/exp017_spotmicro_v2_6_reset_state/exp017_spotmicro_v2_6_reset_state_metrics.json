@@ -1,0 +1,30 @@
+{
+  "exp_id": 17,
+  "run_name": "spotmicro_v2_6_reset_state",
+  "purpose": "V2.6: 리셋 상태 랜덤화",
+  "timestamp": "2026-04-28T10:30:01.564018",
+  "metrics": {
+    "timeout_pct": 96.2406015037594,
+    "early_death_pct": 0.7518796992481203,
+    "vel_error_x": 0.05252287536859512,
+    "vel_error_y": 0.029545573517680168,
+    "ang_vel_error": 0.12873201072216034,
+    "torque_saturation_pct": 18.2205815018315,
+    "mean_height": 0.215013392465614,
+    "height_std": 0.0016308062812431176,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.015509794347126675,
+    "mean_roll_deg": 2.334960460662842,
+    "mean_pitch_deg": 2.356818437576294,
+    "max_roll_deg": 6.635601043701172,
+    "max_pitch_deg": 6.5182881355285645,
+    "mean_action_rate": 0.006066011730581522,
+    "max_action_rate": 0.7856616973876953,
+    "mean_power": 7.9653096199035645,
+    "power_std": 2.0993173122406006,
+    "cost_of_transport": 2.0034543288420643,
+    "mean_episode_length": 972.406015037594,
+    "mean_episode_return": 61.229896435051934,
+    "num_episodes": 133
+  }
+}

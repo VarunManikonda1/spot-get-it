@@ -1,0 +1,30 @@
+{
+  "exp_id": 24,
+  "run_name": "spotmicro_v3_0_change_urdf",
+  "purpose": "V3.0: urdf 실제 무게 반영",
+  "timestamp": "2026-04-28T16:59:28.667211",
+  "metrics": {
+    "timeout_pct": 97.70992366412213,
+    "early_death_pct": 0.7633587786259541,
+    "vel_error_x": 0.05282993242144585,
+    "vel_error_y": 0.03721718117594719,
+    "ang_vel_error": 0.18011033535003662,
+    "torque_saturation_pct": 33.8096799034299,
+    "mean_height": 0.20374793596776614,
+    "height_std": 0.003139291674910492,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.022410966714638762,
+    "mean_roll_deg": 2.0891196727752686,
+    "mean_pitch_deg": 2.7976951599121094,
+    "max_roll_deg": 5.201509475708008,
+    "max_pitch_deg": 5.582064628601074,
+    "mean_action_rate": 0.021524515002965927,
+    "max_action_rate": 1.0104875564575195,
+    "mean_power": 12.362709999084473,
+    "power_std": 2.84203839302063,
+    "cost_of_transport": 2.6573510651056442,
+    "mean_episode_length": 984.3358778625955,
+    "mean_episode_return": 58.00212691997299,
+    "num_episodes": 131
+  }
+}

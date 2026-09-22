@@ -1,0 +1,20 @@
+# STM32CubeIDE build output
+Debug/
+Release/
+*.elf
+*.bin
+*.hex
+*.map
+*.o
+*.d
+*.lst
+*.su
+
+# IDE-specific (user-local)
+.settings/
+*.launch
+
+# CubeMX backup
+.mxproject
+Inc/Backup/
+Src/Backup/

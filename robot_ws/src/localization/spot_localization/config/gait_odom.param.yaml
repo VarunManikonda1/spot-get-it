@@ -1,0 +1,35 @@
+gait_odom_estimator_node:
+  ros__parameters:
+    # Topic names
+    #stm_motion_topic: "/localization/stm_motion"    # 실험용 input
+    stm_motion_topic: "/localization/spot_motion"   # 실사용 input
+    odom_topic: "/localization/odometry"
+
+    # Frame names
+    odom_frame: "odom"
+    base_frame: "base_link"
+
+    # Gait calibration parameters
+    # 실측 튜닝 후 이 값을 수정한다.
+    forward_step_length_m: 0.13
+    backward_step_length_m: 0.025
+    strafe_left_step_length_m: 0.05
+    strafe_right_step_length_m: 0.05
+
+    # Yaw calibration
+    # 실제 IMU 값이 base_link 기준으로 어느 정도 벌어져있느지 확인 필요
+    yaw_offset_rad: 0.0
+
+    # STM IMU yaw 부호가 ROS 기준과 반대이면 -1.0
+    # ROS 기준: +yaw = 좌회전, 반시계 방향 => 확인 필요
+    imu_yaw_sign: 1.0
+
+    # Safety / filtering
+    # 한 callback에서 허용할 최대 gait phase 변화량
+    # 정상 delta_phase보다 충분히 크게 두되, 통신 지연/값 튐으로 odom이 순간 점프하는 것은 막기 위한 값
+    # 예: gait_cycle_hz=1.0, publish_rate=50Hz이면 정상 delta_phase≈0.02이므로 0.10~0.20 권장
+    max_delta_phase: 0.15
+    publish_tf: true
+
+    freeze_yaw_when_stopped: true
+    gyro_stop_threshold_rad_s: 0.03

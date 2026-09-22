@@ -1,0 +1,7 @@
+/**:
+  ros__parameters:
+    # 발행 토픽 frame_id
+    frame_id: "mission_map"
+    # 절대 경로 지정 시 해당 파일 사용.
+    # 비워두면 패키지 내 config/map.yaml 자동 사용.
+    map_config_path: ""

@@ -1,0 +1,44 @@
+memory_fusion_node:
+  ros__parameters:
+    # 입력 토픽
+    input_local_grid_topic: "/perception/lidar/local_occupancy_grid"
+    input_memory_grid_topic: "/perception/lidar/obstacle_memory_grid"
+    localization_pose_topic: "/localization/pose"
+
+    # 출력 토픽
+    output_fused_grid_topic: "/perception/lidar/local_occupancy_grid_with_memory"
+
+    # frame 설정
+    local_grid_frame: "base_link"
+    memory_grid_frame: "mission_map"
+
+    # timeout 설정
+    # pose나 memory grid가 너무 오래되면 memory fusion을 수행하지 않는다.
+    pose_timeout_sec: 0.5
+    memory_grid_timeout_sec: 0.7
+
+    # OccupancyGrid cell value
+    unknown_value: -1
+    free_value: 0
+    occupied_value: 100
+
+    # occupied 판단 기준
+    local_occupied_threshold: 50
+    memory_occupied_threshold: 50
+
+    # memory 또는 pose가 없을 때 local grid를 그대로 output으로 보낼지 여부
+    # true로 두면 FreeSpaceModel 입력을 fused topic으로 바꿔도 pipeline이 끊기지 않는다.
+    publish_without_memory: true
+
+    # 현재 local grid에서 free로 관측된 cell에도 memory obstacle을 덮어쓸지 여부
+    # 초기 추천: false
+    # - false: 현재 LiDAR가 free로 본 최신 관측을 우선
+    # - true : memory obstacle을 더 보수적으로 반영
+    overlay_memory_on_free_cells: false
+
+    # fusion 단계의 추가 inflation
+    # local_occupancy_grid_node와 obstacle_memory_grid_node에서 이미 inflation이 있을 수 있으므로 초기에는 0.0 추천
+    memory_fusion_inflation_radius: 0.0
+
+    # 디버그 로그
+    debug_log: true

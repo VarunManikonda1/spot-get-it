@@ -1,0 +1,46 @@
+free_space_marker_node:
+  ros__parameters:
+    # ============================================================
+    # [1] Topic / Frame
+    # ============================================================
+    input_topic: "/perception/lidar/free_space_model"
+    output_topic: "/perception/lidar/free_space_markers"
+    frame_id: "base_link"
+
+    # ============================================================
+    # [2] Marker Shape
+    # ============================================================
+    marker_z: 0.08
+
+    # selected_gap / candidate_gap 부채꼴 표시 반경 [m]
+    sector_radius: 1.20
+
+    # best heading arrow 길이 [m]
+    arrow_length: 1.00
+
+    # ============================================================
+    # [3] Risk Text Position
+    # ------------------------------------------------------------
+    # text_follow_best_heading=true이면
+    # text_x, text_y는 fallback 위치로만 사용됨
+    # ============================================================
+    text_x: 1.20
+    text_y: 0.90
+    text_z: 0.55
+
+    # selected gap / best heading 방향을 따라 text를 배치할지 여부
+    text_follow_best_heading: true
+
+    # best heading 방향 기준 text 배치 거리 [m]
+    text_radius: 1.45
+
+    # TEXT_VIEW_FACING 글자 크기
+    text_scale_z: 0.08
+
+    # ============================================================
+    # [4] Alpha / Lifetime
+    # ============================================================
+    candidate_alpha: 0.35
+    selected_alpha: 0.65
+
+    marker_lifetime_sec: 0.30

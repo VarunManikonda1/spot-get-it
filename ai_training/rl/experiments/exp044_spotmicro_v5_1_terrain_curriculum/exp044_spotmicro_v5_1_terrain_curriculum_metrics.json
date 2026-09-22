@@ -1,0 +1,30 @@
+{
+  "exp_id": 44,
+  "run_name": "spotmicro_v5_1_terrain_curriculum",
+  "purpose": "V5.1: 복잡한 지형 학습",
+  "timestamp": "2026-05-11T16:37:30.888160",
+  "metrics": {
+    "timeout_pct": 0.041795267489711935,
+    "early_death_pct": 99.77494855967079,
+    "vel_error_x": 0.14588941633701324,
+    "vel_error_y": 0.0975525826215744,
+    "ang_vel_error": 0.6048128008842468,
+    "torque_saturation_pct": 27.98655337717838,
+    "mean_height": 0.06752928945071848,
+    "height_std": 0.0018235730122947418,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.021249543940544544,
+    "mean_roll_deg": 4.10579252243042,
+    "mean_pitch_deg": 5.716395378112793,
+    "max_roll_deg": 7.3935980796813965,
+    "max_pitch_deg": 9.810821533203125,
+    "mean_action_rate": 0.4773319959640503,
+    "max_action_rate": 0.8888304829597473,
+    "mean_power": 3.7335574626922607,
+    "power_std": 0.8897659778594971,
+    "cost_of_transport": 3.687661193401644,
+    "mean_episode_length": 1.9384323559670782,
+    "mean_episode_return": -0.15996797852724692,
+    "num_episodes": 93312
+  }
+}

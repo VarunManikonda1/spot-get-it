@@ -1,0 +1,30 @@
+{
+  "exp_id": 6,
+  "run_name": "spotmicro_v1_1_4_sigma_desc",
+  "purpose": "V1.1.4: tracking sigma 조정으로 민감도를 올림, 속도 추종도 얼마나 좋아지는지 확인",
+  "timestamp": "2026-04-27T09:51:25.688592",
+  "metrics": {
+    "timeout_pct": 100.0,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.059980712831020355,
+    "vel_error_y": 0.026150239631533623,
+    "ang_vel_error": 0.09492485970258713,
+    "torque_saturation_pct": 13.59417492229992,
+    "mean_height": 0.21942754760707095,
+    "height_std": 0.0018343897541273412,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.0364260301294407,
+    "mean_roll_deg": 0.9189366698265076,
+    "mean_pitch_deg": 1.0870587825775146,
+    "max_roll_deg": 3.6475906372070312,
+    "max_pitch_deg": 4.715031147003174,
+    "mean_action_rate": 0.0032488955184817314,
+    "max_action_rate": 0.06885217875242233,
+    "mean_power": 8.484457969665527,
+    "power_std": 2.749577283859253,
+    "cost_of_transport": 1.505792148531939,
+    "mean_episode_length": 1001.5,
+    "mean_episode_return": 71.23317092657089,
+    "num_episodes": 128
+  }
+}

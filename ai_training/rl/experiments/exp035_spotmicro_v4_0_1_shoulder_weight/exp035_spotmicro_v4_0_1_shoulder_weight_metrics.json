@@ -1,0 +1,30 @@
+{
+  "exp_id": 35,
+  "run_name": "spotmicro_v4_0_1_shoulder_weight",
+  "purpose": "V4.0.11: shoulder 관절 weight를 0.9로 변경. 좀 더 IK에 맞게.",
+  "timestamp": "2026-05-04T11:42:12.213358",
+  "metrics": {
+    "timeout_pct": 96.2406015037594,
+    "early_death_pct": 1.5037593984962405,
+    "vel_error_x": 0.03337269276380539,
+    "vel_error_y": 0.021004337817430496,
+    "ang_vel_error": 0.06519967317581177,
+    "torque_saturation_pct": 23.34536123598624,
+    "mean_height": 0.21902093110662518,
+    "height_std": 0.0016403898394658873,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.015515026775844825,
+    "mean_roll_deg": 1.5858687162399292,
+    "mean_pitch_deg": 2.4899213314056396,
+    "max_roll_deg": 8.703428268432617,
+    "max_pitch_deg": 8.011489868164062,
+    "mean_action_rate": 0.027108751237392426,
+    "max_action_rate": 0.6379261612892151,
+    "mean_power": 8.836374282836914,
+    "power_std": 1.817129373550415,
+    "cost_of_transport": 1.9166163484554977,
+    "mean_episode_length": 966.0902255639098,
+    "mean_episode_return": 50.5423215670245,
+    "num_episodes": 133
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "exp_id": 21,
+  "run_name": "spotmicro_v2_9_angle_weight",
+  "purpose": "V2.9: tracking_ik의 관절 각도 가중치 설정, 어깨 관절에 자유도 늘려 회전 오차 줄어드는지 확인",
+  "timestamp": "2026-04-28T13:51:57.974818",
+  "metrics": {
+    "timeout_pct": 98.46153846153847,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.05177343264222145,
+    "vel_error_y": 0.03235375136137009,
+    "ang_vel_error": 0.13366758823394775,
+    "torque_saturation_pct": 28.275110306360308,
+    "mean_height": 0.2088620431753464,
+    "height_std": 0.0021370585139621535,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.01861677294750118,
+    "mean_roll_deg": 1.5798410177230835,
+    "mean_pitch_deg": 3.589850664138794,
+    "max_roll_deg": 5.249596118927002,
+    "max_pitch_deg": 5.919192790985107,
+    "mean_action_rate": 0.00957552157342434,
+    "max_action_rate": 0.5695877075195312,
+    "mean_power": 10.449432373046875,
+    "power_std": 2.7061667442321777,
+    "cost_of_transport": 2.055813840648939,
+    "mean_episode_length": 986.9153846153846,
+    "mean_episode_return": 64.21964184573064,
+    "num_episodes": 130
+  }
+}

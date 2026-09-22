@@ -1,0 +1,30 @@
+{
+  "exp_id": 22,
+  "run_name": "spotmicro_v2_10_ang_improve",
+  "purpose": "V2.10: 가중치 복구, trot contact reward 제자리 회전 시 적용 안되는 문제 fix, 경과 관찰",
+  "timestamp": "2026-04-28T14:35:58.487402",
+  "metrics": {
+    "timeout_pct": 98.46153846153847,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.04698850214481354,
+    "vel_error_y": 0.022093867883086205,
+    "ang_vel_error": 0.10673219710588455,
+    "torque_saturation_pct": 17.61888285325785,
+    "mean_height": 0.21491105116648235,
+    "height_std": 0.0016683685552458195,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.01756029422271267,
+    "mean_roll_deg": 1.8365609645843506,
+    "mean_pitch_deg": 1.8062703609466553,
+    "max_roll_deg": 4.668199062347412,
+    "max_pitch_deg": 5.473524570465088,
+    "mean_action_rate": 0.006648684851825237,
+    "max_action_rate": 0.5667082071304321,
+    "mean_power": 8.14206600189209,
+    "power_std": 2.2692062854766846,
+    "cost_of_transport": 1.7979807151142129,
+    "mean_episode_length": 987.276923076923,
+    "mean_episode_return": 68.87281716374251,
+    "num_episodes": 130
+  }
+}

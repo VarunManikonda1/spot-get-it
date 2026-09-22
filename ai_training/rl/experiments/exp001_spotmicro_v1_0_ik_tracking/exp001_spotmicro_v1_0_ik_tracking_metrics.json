@@ -1,0 +1,30 @@
+{
+  "exp_id": 1,
+  "run_name": "spotmicro_v1_0_ik_tracking",
+  "purpose": "V1.0: default IK 동작을 모방하여 보행, 환경에 따른 변수를 RL로 보정",
+  "timestamp": "2026-04-24T15:05:49.389322",
+  "metrics": {
+    "timeout_pct": 100.0,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.10251015424728394,
+    "vel_error_y": 0.040156763046979904,
+    "ang_vel_error": 0.08413916081190109,
+    "torque_saturation_pct": 16.43087814962815,
+    "mean_height": 0.21846975378203384,
+    "height_std": 0.001448992654381646,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.0236252628677439,
+    "mean_roll_deg": 1.785449504852295,
+    "mean_pitch_deg": 1.3066006898880005,
+    "max_roll_deg": 5.780513286590576,
+    "max_pitch_deg": 7.535431385040283,
+    "mean_action_rate": 0.005130550358444452,
+    "max_action_rate": 0.40410053730010986,
+    "mean_power": 7.793137073516846,
+    "power_std": 4.216524124145508,
+    "cost_of_transport": 1.7522865127823286,
+    "mean_episode_length": 1001.5,
+    "mean_episode_return": 61.91213923692703,
+    "num_episodes": 128
+  }
+}

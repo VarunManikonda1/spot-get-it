@@ -1,0 +1,30 @@
+rl_locomotion_node:
+  ros__parameters:
+    model_path: "models/exp043_policy.onnx"
+
+    ik_profile: "exp043"
+
+    action_scale: 0.25
+    action_clip: 100.0
+
+    gait_period: 0.6
+    duty_factor: 0.5
+    step_height: 0.03
+    body_height: 0.206
+    robot_width: 0.15
+
+    phase_cmd_norm: 0.1
+    blend_cmd_norm: 0.1
+
+    vx_min: 0.0
+    vx_max: 0.40
+    vy_min: 0.0
+    vy_max: 0.0
+    wz_min: -0.40
+    wz_max: 0.40
+
+    default_joint_angles:
+      [0.0, -0.6, 1.1,
+       0.0, -0.6, 1.1,
+       0.0, -0.6, 1.1,
+       0.0, -0.6, 1.1]

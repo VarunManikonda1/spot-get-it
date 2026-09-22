@@ -1,0 +1,25 @@
+<launch>
+  <node
+    pkg="spot_navigation"
+    exec="navigation_fsm_node"
+    name="navigation_fsm_node"
+    output="screen"
+    args="--ros-args --params-file $(find-pkg-share spot_navigation)/config/navigation_fsm.param.yaml"
+  />
+
+  <node
+    pkg="spot_navigation"
+    exec="path_follower_node"
+    name="path_follower_node"
+    output="screen"
+    args="--ros-args --params-file $(find-pkg-share spot_navigation)/config/path_follower.param.yaml"
+  />
+
+  <node
+    pkg="spot_navigation"
+    exec="safety_supervisor_node"
+    name="safety_supervisor_node"
+    output="screen"
+    args="--ros-args --params-file $(find-pkg-share spot_navigation)/config/safety_supervisor.param.yaml"
+  />
+</launch>

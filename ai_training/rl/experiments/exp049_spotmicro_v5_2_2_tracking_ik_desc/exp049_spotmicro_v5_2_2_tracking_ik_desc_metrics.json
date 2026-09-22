@@ -1,0 +1,30 @@
+{
+  "exp_id": 49,
+  "run_name": "spotmicro_v5_2_2_tracking_ik_desc",
+  "purpose": "V5.2.1: gait period 조정",
+  "timestamp": "2026-05-12T09:53:07.090008",
+  "metrics": {
+    "timeout_pct": 94.81481481481482,
+    "early_death_pct": 0.7407407407407408,
+    "vel_error_x": 0.04859192669391632,
+    "vel_error_y": 0.028430577367544174,
+    "ang_vel_error": 0.09731169790029526,
+    "torque_saturation_pct": 16.82609924797425,
+    "mean_height": 0.21129149475913028,
+    "height_std": 0.003493599702544599,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.018344309392910547,
+    "mean_roll_deg": 2.3763673305511475,
+    "mean_pitch_deg": 2.284407138824463,
+    "max_roll_deg": 5.745127201080322,
+    "max_pitch_deg": 4.296038627624512,
+    "mean_action_rate": 0.008535211905837059,
+    "max_action_rate": 0.5746075510978699,
+    "mean_power": 5.7789835929870605,
+    "power_std": 1.6028847694396973,
+    "cost_of_transport": 2.0629258450886914,
+    "mean_episode_length": 958.8888888888889,
+    "mean_episode_return": 62.981999398160866,
+    "num_episodes": 135
+  }
+}

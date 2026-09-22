@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Spot Micro URDF - Isaac Gym / legged_gym 학습용
+  원본: spotmicroai_gen_ros.urdf
+  
+  수정 내역:
+  1. 관성 텐서를 collision box 기반으로 현실적인 값으로 계산
+     공식: Ixx = m/12 * (y^2 + z^2), Iyy = m/12 * (x^2 + z^2), Izz = m/12 * (x^2 + y^2)
+  2. effort를 STS3215 스톨 토크 기준 1.47 N·m로 변경
+  3. dynamics damping/friction을 현실적인 값으로 통일
+  4. visual mesh를 collision과 동일한 기본 도형으로 대체 (STL 불필요)
+  5. lidar_link, cover 링크 등 장식용 파츠 유지 (fixed joint라 학습에 영향 없음)
+-->
+<robot name="spot_micro">
+
+  <material name="yellow">
+    <color rgba="0.92 0.83 0.0 1"/>
+  </material>
+  <material name="black">
+    <color rgba="0.1 0.1 0.1 1"/>
+  </material>
+  <material name="grey">
+    <color rgba="0.6 0.6 0.6 1"/>
+  </material>
+
+  <!-- ============== BODY ============== -->
+  <!-- base_link: 몸체 중심. mass에 Jetson, LiPo, STM32 등 탑재물 무게 포함 -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/mainbody.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="black"/>
+      <origin rpy="0 0 0" xyz="-0.045 -0.060 -0.015"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.14 0.11 0.07"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.80"/>
+      <!-- m=2.80, box 0.14 x 0.11 x 0.07 -->
+      <!-- Ixx = 2.80/12 * (0.11^2 + 0.07^2) = 0.00396 -->
+      <!-- Iyy = 2.80/12 * (0.14^2 + 0.07^2) = 0.00570 -->
+      <!-- Izz = 2.80/12 * (0.14^2 + 0.11^2) = 0.00739 -->
+      <inertia ixx="0.00396" ixy="0" ixz="0" iyy="0.00570" iyz="0" izz="0.00739"/>
+    </inertial>
+  </link>
+
+  <!-- rear_link: 몸체 뒷부분 커버 (fixed) -->
+  <link name="rear_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/backpart.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.040 -0.060 -0.0140"/>
+      <material name="yellow"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.04 0.11 0.07"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0.135 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.20"/>
+      <!-- m=0.20, box 0.04 x 0.11 x 0.07 -->
+      <inertia ixx="0.00028" ixy="0" ixz="0" iyy="0.00011" iyz="0" izz="0.00023"/>
+    </inertial>
+  </link>
+  <joint name="base_rear" type="fixed">
+    <parent link="base_link"/>
+    <child link="rear_link"/>
+  </joint>
+
+  <!-- front_link: 몸체 앞부분 커버 (fixed) -->
+  <link name="front_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/frontpart.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.040 -0.060 -0.0140"/>
+      <material name="yellow"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.058 0.11 0.07"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.145 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.20"/>
+      <!-- m=0.20, box 0.058 x 0.11 x 0.07 -->
+      <inertia ixx="0.00028" ixy="0" ixz="0" iyy="0.00014" iyz="0" izz="0.00025"/>
+    </inertial>
+  </link>
+  <joint name="base_front" type="fixed">
+    <parent link="base_link"/>
+    <child link="front_link"/>
+  </joint>
+
+  <!-- ============== FRONT LEFT LEG ============== -->
+  <link name="front_left_shoulder_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/lshoulder.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.135 -0.02 -0.01"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.044 0.038 0.07"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.10"/>
+      <!-- m=0.10, box 0.044 x 0.038 x 0.07 -->
+      <inertia ixx="0.0000054" ixy="0" ixz="0" iyy="0.0000057" iyz="0" izz="0.0000029"/>
+    </inertial>
+  </link>
+  <joint name="front_left_shoulder" type="revolute">
+    <parent link="base_link"/>
+    <child link="front_left_shoulder_link"/>
+    <axis xyz="1 0 0"/>
+    <origin rpy="0 0 0" xyz="-0.093 -0.036 0"/>
+    <limit effort="1.47" lower="-0.548" upper="0.548" velocity="5.24"/>
+    <dynamics damping="0.02" friction="0.02"/>
+  </joint>
+  
+  <link name="front_left_leg_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/larm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.125 0.04 -0.02"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.028 0.036 0.12"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.05"/>
+    </collision>
+    <inertial>
+      <mass value="0.15"/>
+      <!-- m=0.15, box 0.028 x 0.036 x 0.12 -->
+      <inertia ixx="0.0000198" ixy="0" ixz="0" iyy="0.0000189" iyz="0" izz="0.0000033"/>
+    </inertial>
+  </link>
+  <joint name="front_left_leg" type="revolute">
+    <parent link="front_left_shoulder_link"/>
+    <child link="front_left_leg_link"/>
+    <axis xyz="0 1 0"/>
+    <origin rpy="0 0 0" xyz="0 -0.052 0"/>
+    <limit effort="1.47" lower="-2.666" upper="1.548" velocity="5.24"/>
+    <dynamics damping="0.02" friction="0.02"/>
+  </joint>
+
+  <link name="front_left_leg_link_cover">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/larm_cover.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.125 0.04 -0.02"/>
+      <material name="yellow"/>
+    </visual>
+  </link>
+  <joint name="front_left_leg_cover_joint" type="fixed">
+    <parent link="front_left_leg_link"/>
+    <child link="front_left_leg_link_cover"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+  
+  <link name="front_left_foot_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/lfoot.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.120 0.04 0.1"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.026 0.020 0.115"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.05"/>
+    </collision>
+    <inertial>
+      <mass value="0.10"/>
+      <!-- m=0.10, box 0.026 x 0.020 x 0.115 -->
+      <inertia ixx="0.0000114" ixy="0" ixz="0" iyy="0.0000116" iyz="0" izz="0.0000009"/>
+    </inertial>
+  </link>
+  <joint name="front_left_foot" type="revolute">
+    <parent link="front_left_leg_link"/>
+    <child link="front_left_foot_link"/>
+    <axis xyz="0 1 0"/>
+    <origin rpy="0 0 0" xyz="-0.01 0 -0.12"/>
+    <limit effort="1.47" lower="-0.1" upper="2.59" velocity="5.24"/>
+    <dynamics damping="0.02" friction="0.02"/>
+  </joint>
+
+  <link name="front_left_toe_link">
+    <visual>
+      <geometry>
+        <mesh filename="../STL/files/foot.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 -0.40010 0" xyz="0 -0.01 0"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.02"/>
+      </geometry>
+      <contact_coefficients mu="1.1"/>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <!-- m=0.05, sphere r=0.02 -->
+      <!-- I = 2/5 * m * r^2 = 0.000008 -->
+      <inertia ixx="0.000008" ixy="0" ixz="0" iyy="0.000008" iyz="0" izz="0.000008"/>
+    </inertial>
+  </link>
+  <joint name="front_left_toe" type="fixed">
+    <parent link="front_left_foot_link"/>
+    <child link="front_left_toe_link"/>
+    <origin xyz="0 0 -0.115"/>
+  </joint>
+
+  <!-- ============== FRONT RIGHT LEG ============== -->
+  <link name="front_right_shoulder_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/rshoulder.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.135 -0.09 -0.01"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.044 0.038 0.07"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.10"/>
+      <inertia ixx="0.0000054" ixy="0" ixz="0" iyy="0.0000057" iyz="0" izz="0.0000029"/>
+    </inertial>
+  </link>
+  <joint name="front_right_shoulder" type="revolute">
+    <parent link="base_link"/>
+    <child link="front_right_shoulder_link"/>
+    <axis xyz="1 0 0"/>
+    <origin rpy="0 0 0" xyz="-0.093 0.036 0"/>
+    <limit effort="1.47" lower="-0.548" upper="0.548" velocity="5.24"/>
+    <dynamics damping="0.02" friction="0.02"/>
+  </joint>
+
+  <link name="front_right_leg_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/rarm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.125 -0.15 -0.02"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.028 0.036 0.12"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.05"/>
+    </collision>
+    <inertial>
+      <mass value="0.15"/>
+      <inertia ixx="0.0000198" ixy="0" ixz="0" iyy="0.0000189" iyz="0" izz="0.0000033"/>
+    </inertial>
+  </link>
+  <joint name="front_right_leg" type="revolute">
+    <parent link="front_right_shoulder_link"/>
+    <child link="front_right_leg_link"/>
+    <axis xyz="0 1 0"/>
+    <origin rpy="0 0 0" xyz="0 0.052 0"/>
+    <limit effort="1.47" lower="-2.666" upper="1.548" velocity="5.24"/>
+    <dynamics damping="0.02" friction="0.02"/>
+  </joint>
+
+  <link name="front_right_leg_link_cover">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/rarm_cover.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.125 -0.15 -0.02"/>
+      <material name="yellow"/>
+    </visual>
+  </link>
+  <joint name="front_right_leg_cover_joint" type="fixed">
+    <parent link="front_right_leg_link"/>
+    <child link="front_right_leg_link_cover"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+  
+  <link name="front_right_foot_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/rfoot.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.120 -0.15 0.1"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.026 0.020 0.115"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.05"/>
+    </collision>
+    <inertial>
+      <mass value="0.10"/>
+      <inertia ixx="0.0000114" ixy="0" ixz="0" iyy="0.0000116" iyz="0" izz="0.0000009"/>
+    </inertial>
+  </link>
+  <joint name="front_right_foot" type="revolute">
+    <parent link="front_right_leg_link"/>
+    <child link="front_right_foot_link"/>
+    <axis xyz="0 1 0"/>
+    <origin rpy="0 0 0" xyz="-0.01 0 -0.12"/>
+    <limit effort="1.47" lower="-0.1" upper="2.59" velocity="5.24"/>
+    <dynamics damping="0.02" friction="0.02"/>
+  </joint>
+
+  <link name="front_right_toe_link">
+    <visual>
+      <geometry>
+        <mesh filename="../STL/files/foot.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 -0.40010 0" xyz="0 -0.01 0"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.02"/>
+      </geometry>
+      <contact_coefficients mu="1.1"/>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="0.000008" ixy="0" ixz="0" iyy="0.000008" iyz="0" izz="0.000008"/>
+    </inertial>
+  </link>
+  <joint name="front_right_toe" type="fixed">
+    <parent link="front_right_foot_link"/>
+    <child link="front_right_toe_link"/>
+    <origin xyz="0 0 -0.115"/>
+  </joint>
+
+  <!-- ============== REAR LEFT LEG ============== -->
+  <link name="rear_left_shoulder_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/lshoulder.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.135 -0.02 -0.01"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.044 0.038 0.07"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.10"/>
+      <inertia ixx="0.0000054" ixy="0" ixz="0" iyy="0.0000057" iyz="0" izz="0.0000029"/>
+    </inertial>
+  </link>
+  <joint name="rear_left_shoulder" type="revolute">
+    <parent link="base_link"/>
+    <child link="rear_left_shoulder_link"/>
+    <axis xyz="1 0 0"/>
+    <origin rpy="0 0 0" xyz="0.093 -0.036 0"/>
+    <limit effort="1.47" lower="-0.548" upper="0.548" velocity="5.24"/>
+    <dynamics damping="0.02" friction="0.02"/>
+  </joint>
+
+  <link name="rear_left_leg_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/larm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.125 0.04 -0.02"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.028 0.036 0.12"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.05"/>
+    </collision>
+    <inertial>
+      <mass value="0.15"/>
+      <inertia ixx="0.0000198" ixy="0" ixz="0" iyy="0.0000189" iyz="0" izz="0.0000033"/>
+    </inertial>
+  </link>
+  <joint name="rear_left_leg" type="revolute">
+    <parent link="rear_left_shoulder_link"/>
+    <child link="rear_left_leg_link"/>
+    <axis xyz="0 1 0"/>
+    <origin rpy="0 0 0" xyz="0 -0.052 0"/>
+    <limit effort="1.47" lower="-2.666" upper="1.548" velocity="5.24"/>
+    <dynamics damping="0.02" friction="0.02"/>
+  </joint>
+
+  <link name="rear_left_leg_link_cover">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/larm_cover.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.125 0.04 -0.02"/>
+      <material name="yellow"/>
+    </visual>
+  </link>
+  <joint name="rear_left_leg_cover_joint" type="fixed">
+    <parent link="rear_left_leg_link"/>
+    <child link="rear_left_leg_link_cover"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+
+  <link name="rear_left_foot_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/lfoot.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.120 0.04 0.1"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.026 0.020 0.115"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.05"/>
+    </collision>
+    <inertial>
+      <mass value="0.10"/>
+      <inertia ixx="0.0000114" ixy="0" ixz="0" iyy="0.0000116" iyz="0" izz="0.0000009"/>
+    </inertial>
+  </link>
+  <joint name="rear_left_foot" type="revolute">
+    <parent link="rear_left_leg_link"/>
+    <child link="rear_left_foot_link"/>
+    <axis xyz="0 1 0"/>
+    <origin rpy="0 0 0" xyz="-0.01 0 -0.12"/>
+    <limit effort="1.47" lower="-0.1" upper="2.59" velocity="5.24"/>
+    <dynamics damping="0.02" friction="0.02"/>
+  </joint>
+
+  <link name="rear_left_toe_link">
+    <visual>
+      <geometry>
+        <mesh filename="../STL/files/foot.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 -0.40010 0" xyz="0 -0.01 0"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.02"/>
+      </geometry>
+      <contact_coefficients mu="1.1"/>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="0.000008" ixy="0" ixz="0" iyy="0.000008" iyz="0" izz="0.000008"/>
+    </inertial>
+  </link>
+  <joint name="rear_left_toe" type="fixed">
+    <parent link="rear_left_foot_link"/>
+    <child link="rear_left_toe_link"/>
+    <origin xyz="0 0 -0.115"/>
+  </joint>
+
+  <!-- ============== REAR RIGHT LEG ============== -->
+  <link name="rear_right_shoulder_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/rshoulder.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.135 -0.09 -0.01"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.044 0.038 0.07"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.10"/>
+      <inertia ixx="0.0000054" ixy="0" ixz="0" iyy="0.0000057" iyz="0" izz="0.0000029"/>
+    </inertial>
+  </link>
+  <joint name="rear_right_shoulder" type="revolute">
+    <parent link="base_link"/>
+    <child link="rear_right_shoulder_link"/>
+    <axis xyz="1 0 0"/>
+    <origin rpy="0 0 0" xyz="0.093 0.036 0"/>
+    <limit effort="1.47" lower="-0.548" upper="0.548" velocity="5.24"/>
+    <dynamics damping="0.02" friction="0.02"/>
+  </joint>
+
+  <link name="rear_right_leg_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/rarm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.125 -0.15 -0.02"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.028 0.036 0.12"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.05"/>
+    </collision>
+    <inertial>
+      <mass value="0.15"/>
+      <inertia ixx="0.0000198" ixy="0" ixz="0" iyy="0.0000189" iyz="0" izz="0.0000033"/>
+    </inertial>
+  </link>
+  <joint name="rear_right_leg" type="revolute">
+    <parent link="rear_right_shoulder_link"/>
+    <child link="rear_right_leg_link"/>
+    <axis xyz="0 1 0"/>
+    <origin rpy="0 0 0" xyz="0 0.052 0"/>
+    <limit effort="1.47" lower="-2.666" upper="1.548" velocity="5.24"/>
+    <dynamics damping="0.02" friction="0.02"/>
+  </joint>
+
+  <link name="rear_right_leg_link_cover">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/rarm_cover.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.125 -0.15 -0.02"/>
+      <material name="yellow"/>
+    </visual>
+  </link>
+  <joint name="rear_right_leg_cover_joint" type="fixed">
+    <parent link="rear_right_leg_link"/>
+    <child link="rear_right_leg_link_cover"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+  
+  <link name="rear_right_foot_link">
+    <visual>
+      <geometry>
+        <mesh filename="../Parts/rfoot.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.120 -0.15 0.1"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.026 0.020 0.115"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.05"/>
+    </collision>
+    <inertial>
+      <mass value="0.10"/>
+      <inertia ixx="0.0000114" ixy="0" ixz="0" iyy="0.0000116" iyz="0" izz="0.0000009"/>
+    </inertial>
+  </link>
+  <joint name="rear_right_foot" type="revolute">
+    <parent link="rear_right_leg_link"/>
+    <child link="rear_right_foot_link"/>
+    <axis xyz="0 1 0"/>
+    <origin rpy="0 0 0" xyz="-0.01 0 -0.12"/>
+    <limit effort="1.47" lower="-0.1" upper="2.59" velocity="5.24"/>
+    <dynamics damping="0.02" friction="0.02"/>
+  </joint>
+
+  <link name="rear_right_toe_link">
+    <visual>
+      <geometry>
+        <mesh filename="../STL/files/foot.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 -0.40010 0" xyz="0 -0.01 0"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.02"/>
+      </geometry>
+      <contact_coefficients mu="1.1"/>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="0.000008" ixy="0" ixz="0" iyy="0.000008" iyz="0" izz="0.000008"/>
+    </inertial>
+  </link>
+  <joint name="rear_right_toe" type="fixed">
+    <parent link="rear_right_foot_link"/>
+    <child link="rear_right_toe_link"/>
+    <origin xyz="0 0 -0.115"/>
+  </joint>
+
+</robot>

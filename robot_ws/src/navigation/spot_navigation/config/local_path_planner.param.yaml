@@ -1,0 +1,56 @@
+local_path_planner_node:
+  ros__parameters:
+    robot_id: "spot_01"
+    global_frame: "mission_map"
+
+    # Input: Obstacle Model & Free Space Model Topic
+    obstacle_model_topic: "/perception/lidar/obstacle_model"
+    free_space_model_topic: "/perception/lidar/free_space_model"
+
+    # Input: Path Progress & Localization Pose
+    path_progress_topic: "/navigation/path_progress/spot_01"
+    localization_pose_topic: "/localization/pose"
+
+    # Output: Local Path & Local Planner Status
+    local_path_topic: "/navigation/local_path/spot_01"
+    local_planner_status_topic: "/navigation/local_planner_status/spot_01"
+    
+    # local path/status publish 주기
+    publish_rate_hz: 10.0
+    
+    obstacle_model_timeout_sec: 0.5     # Obstacle Model's timeout: 0.5s
+    free_space_model_timeout_sec: 0.5   # Free Space Model's timeout: 0.5s
+    path_progress_timeout_sec: 0.5      # PathProgress's timeout: 0.5s
+    pose_timeout_sec: 0.5               # Localization Pose's timeout: 0.5s
+
+    # Front obstacle hysteresis
+    # - 0.60m 이내: front danger
+    # - 1.00m 이상: 멀어져야 front clear
+    front_block_distance_m: 0.60        # GLOBAL_SUB_GOAL → AVOIDANCE/BLOCKED 진입 기준 (기존: 0.60)
+    front_clear_distance_m: 1.00        # AVOIDANCE → REJOIN 전이 기준 (기존: 0.80)
+
+    # [추가] Side obstacle hysteresis
+    # AVOIDANCE 중 장애물이 front에서 left/right로 빠져도
+    # side가 충분히 멀어지기 전까지 REJOIN하지 않도록 한다.
+    side_block_distance_m: 0.30         # 위험 진입 기준
+    side_clear_distance_m: 0.70         # 위험 해제 기준: 있어도 side_clear_distance_m보다 멀면 is*Clear() = True 
+
+    avoidance_min_clearance_m: 0.35     # FreeSpaceModel's Gap을 실제 회피 path로 쓸 수 있는지의 Planner 기준 (기존: 0.40)
+    avoidance_horizon_m: 0.70           # 회피 target을 현재 pose 기준 몇 m 앞에 둘지 (기존: 0.70)
+
+    # [추가] AVOIDANCE latch
+    # AVOIDANCE 상태를 유지를 위한 Parameter
+    # avoidance_min_travel_m ≈ avoidance_horizon_m의 50~100%
+    avoidance_min_hold_sec: 1.5         # latch 최소 시간
+    avoidance_min_travel_m: 0.50        # latch 최소 이동 거리
+
+    rejoin_tolerance_m: 0.30            # REJOIN 상태에서 global path로 복귀했는지 판단하는 거리 기준
+    rejoin_heading_tolerance_rad: 0.35  # REJOIN 상태에서 로봇 yaw가 global path target 방향과 정렬되었는지 판단하는 각도 기준
+
+    local_path_spacing_m: 0.10          # local path 점 사이 간격
+    max_local_path_length_m: 1.50       # 한 번에 만들 local path 최대 길이
+    local_target_tolerance_m: 0.20      # 현재 pose가 local target에 도달했다고 판단하는 거리
+
+    # local target yaw를 PathProgress.target_yaw_rad로 둘지,
+    # selected_heading_rad로 둘지 선택
+    use_path_progress_target_yaw: true

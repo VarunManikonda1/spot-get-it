@@ -1,0 +1,30 @@
+{
+  "exp_id": 47,
+  "run_name": "spotmicro_v5_2_2_tracking_ik_desc",
+  "purpose": "V5.2.2: IK tracking 완화",
+  "timestamp": "2026-05-12T09:35:37.818259",
+  "metrics": {
+    "timeout_pct": 90.71428571428571,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.0778280645608902,
+    "vel_error_y": 0.04146339371800423,
+    "ang_vel_error": 0.13913190364837646,
+    "torque_saturation_pct": 11.01064733877234,
+    "mean_height": 0.21302789142042092,
+    "height_std": 0.0024418453517873096,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.019144567850244654,
+    "mean_roll_deg": 2.2118630409240723,
+    "mean_pitch_deg": 2.151259422302246,
+    "max_roll_deg": 5.595005512237549,
+    "max_pitch_deg": 5.8733134269714355,
+    "mean_action_rate": 0.005558726377785206,
+    "max_action_rate": 0.47988033294677734,
+    "mean_power": 5.078323841094971,
+    "power_std": 1.679205060005188,
+    "cost_of_transport": 2.4737412863448722,
+    "mean_episode_length": 936.0285714285715,
+    "mean_episode_return": 51.74486496533666,
+    "num_episodes": 140
+  }
+}

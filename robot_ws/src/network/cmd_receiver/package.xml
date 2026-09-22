@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>cmd_receiver</name>
+  <version>0.0.1</version>
+  <description>UDP 명령 수신 후 ROS2 토픽 publish 노드</description>
+  <maintainer email="jetson@example.com">jetson</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>python3-bleak</exec_depend>
+</package>

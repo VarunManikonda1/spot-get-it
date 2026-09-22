@@ -1,0 +1,30 @@
+{
+  "exp_id": 33,
+  "run_name": "spotmicro_v3_4_ik_sigma_asc",
+  "purpose": "V3.4: tracking_ik 의 sigma를 감소한 pd gain 값에 맞게 조정.",
+  "timestamp": "2026-05-04T10:18:58.319871",
+  "metrics": {
+    "timeout_pct": 99.2248062015504,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.04149514064192772,
+    "vel_error_y": 0.023415401577949524,
+    "ang_vel_error": 0.07597436755895615,
+    "torque_saturation_pct": 22.160088175713174,
+    "mean_height": 0.20573696586893592,
+    "height_std": 0.0030362079763315663,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.024000323637904393,
+    "mean_roll_deg": 1.009453535079956,
+    "mean_pitch_deg": 2.9411325454711914,
+    "max_roll_deg": 5.159852981567383,
+    "max_pitch_deg": 5.019399166107178,
+    "mean_action_rate": 0.00677996501326561,
+    "max_action_rate": 0.4750854969024658,
+    "mean_power": 9.017000198364258,
+    "power_std": 2.6784377098083496,
+    "cost_of_transport": 1.9900395773093378,
+    "mean_episode_length": 997.9457364341085,
+    "mean_episode_return": 72.84150311373925,
+    "num_episodes": 129
+  }
+}

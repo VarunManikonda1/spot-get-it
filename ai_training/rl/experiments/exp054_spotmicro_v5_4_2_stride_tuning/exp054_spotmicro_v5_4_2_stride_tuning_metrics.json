@@ -1,0 +1,30 @@
+{
+  "exp_id": 54,
+  "run_name": "spotmicro_v5_4_2_stride_tuning",
+  "purpose": "V5.4.2: shoulder reg delete",
+  "timestamp": "2026-05-12T15:35:06.292798",
+  "metrics": {
+    "timeout_pct": 92.7536231884058,
+    "early_death_pct": 3.6231884057971016,
+    "vel_error_x": 0.048926446586847305,
+    "vel_error_y": 0.026524771004915237,
+    "ang_vel_error": 0.09287805110216141,
+    "torque_saturation_pct": 14.445580461205463,
+    "mean_height": 0.20871377801085328,
+    "height_std": 0.0027979208202009655,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.019828645754654376,
+    "mean_roll_deg": 1.9867379665374756,
+    "mean_pitch_deg": 1.926176905632019,
+    "max_roll_deg": 5.888185977935791,
+    "max_pitch_deg": 6.897716999053955,
+    "mean_action_rate": 0.005251478403806686,
+    "max_action_rate": 0.32923394441604614,
+    "mean_power": 5.8792195320129395,
+    "power_std": 1.367291808128357,
+    "cost_of_transport": 1.986162801942351,
+    "mean_episode_length": 941.0652173913044,
+    "mean_episode_return": 65.23601198871283,
+    "num_episodes": 138
+  }
+}

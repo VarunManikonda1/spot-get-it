@@ -1,0 +1,26 @@
+std_msgs/Header header
+
+string robot_id
+
+bool safe_to_move
+bool soft_stop_required
+bool emergency_stop_required
+
+bool pose_stale
+bool perception_stale
+bool cmd_stale
+bool obstacle_too_close
+bool goal_reached
+bool local_path_invalid
+
+float32 nearest_front_obstacle_m
+float32 soft_stop_distance_m
+float32 emergency_stop_distance_m
+
+float32 input_linear_x_mps
+float32 input_angular_z_radps
+
+float32 output_linear_x_mps
+float32 output_angular_z_radps
+
+string reason

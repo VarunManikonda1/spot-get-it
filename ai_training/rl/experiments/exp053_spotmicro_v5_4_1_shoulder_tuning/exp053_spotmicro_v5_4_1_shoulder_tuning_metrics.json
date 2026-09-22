@@ -1,0 +1,30 @@
+{
+  "exp_id": 53,
+  "run_name": "spotmicro_v5_4_1_shoulder_tuning",
+  "purpose": "V5.4.1: shoulder ref 약화",
+  "timestamp": "2026-05-12T14:21:52.952984",
+  "metrics": {
+    "timeout_pct": 27.253218884120173,
+    "early_death_pct": 71.67381974248927,
+    "vel_error_x": 0.06028043478727341,
+    "vel_error_y": 0.02871358022093773,
+    "ang_vel_error": 0.1184057667851448,
+    "torque_saturation_pct": 17.37537635975136,
+    "mean_height": 0.20959802997576726,
+    "height_std": 0.002912432896600334,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.023372731912334375,
+    "mean_roll_deg": 1.7040601968765259,
+    "mean_pitch_deg": 2.1936862468719482,
+    "max_roll_deg": 7.955944061279297,
+    "max_pitch_deg": 6.86597204208374,
+    "mean_action_rate": 0.009759251028299332,
+    "max_action_rate": 0.256761759519577,
+    "mean_power": 7.026157379150391,
+    "power_std": 1.7301511764526367,
+    "cost_of_transport": 2.5852412533405866,
+    "mean_episode_length": 280.56223175965664,
+    "mean_episode_return": 18.68863506161092,
+    "num_episodes": 466
+  }
+}

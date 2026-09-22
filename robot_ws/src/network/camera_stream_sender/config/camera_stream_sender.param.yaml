@@ -1,0 +1,12 @@
+camera_stream_sender_node:
+  ros__parameters:
+    # RPi BridgeDaemon IP (필수)
+    rpi_ip: "70.12.112.112"
+
+    # 로봇 ID (BridgeDaemon robot_id와 일치해야 함)
+    robot_id: 0
+
+    # 프레임 크기 상한 (bytes)
+    # BridgeDaemon REASM_BUF_MAX = 512KB
+    # CompressedImage 보통 30~80KB
+    max_size_bytes: 200000

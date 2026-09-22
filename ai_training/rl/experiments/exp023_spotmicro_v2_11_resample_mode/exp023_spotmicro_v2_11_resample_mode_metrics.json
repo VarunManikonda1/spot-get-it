@@ -1,0 +1,30 @@
+{
+  "exp_id": 23,
+  "run_name": "spotmicro_v2_11_resample_mode",
+  "purpose": "V2.11: 여러 경우의 동작을 mode로 구분하여 학습시킴",
+  "timestamp": "2026-04-28T15:16:44.767596",
+  "metrics": {
+    "timeout_pct": 96.2406015037594,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.07440464198589325,
+    "vel_error_y": 0.035436224192380905,
+    "ang_vel_error": 0.22734344005584717,
+    "torque_saturation_pct": 37.19249500499501,
+    "mean_height": 0.18182292650570045,
+    "height_std": 0.004614088705391604,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.011900492674436035,
+    "mean_roll_deg": 3.1162965297698975,
+    "mean_pitch_deg": 4.310858726501465,
+    "max_roll_deg": 5.229414939880371,
+    "max_pitch_deg": 6.862082481384277,
+    "mean_action_rate": 0.044919587671756744,
+    "max_action_rate": 2.6089649200439453,
+    "mean_power": 9.319442749023438,
+    "power_std": 2.5501720905303955,
+    "cost_of_transport": 4.821681451364142,
+    "mean_episode_length": 974.3458646616541,
+    "mean_episode_return": 34.47349416302111,
+    "num_episodes": 133
+  }
+}

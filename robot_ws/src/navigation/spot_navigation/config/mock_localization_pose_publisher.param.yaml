@@ -1,0 +1,65 @@
+mock_localization_pose_publisher_node:
+  ros__parameters:
+    # 더미 localization pose를 publish할 대상 로봇 ID.
+    robot_id: "spot_01"
+
+    # mock_global_path_publisher_node가 publish하는 global path 입력 토픽.
+    global_path_topic: "/planning/mock_global_path/spot_01"
+
+    # PathProgressTrackerNode가 사용할 localization pose 출력 토픽.
+    localization_pose_topic: "/localization/mock_pose"
+
+    # 프로젝트 공통 임무 좌표계.
+    # 팀원 global path와 localization pose 모두 mission_map으로 통일한다.
+    global_frame: "mission_map"
+
+    # pose가 의미하는 로봇 body frame.
+    base_frame: "base_link"
+
+    # global path의 z 값이 비정상적일 때 사용할 기본 z 높이.
+    default_z_m: 0.05
+
+    # 더미 pose publish 주기.
+    # 20Hz이면 0.05초마다 pose를 publish한다.
+    publish_rate_hz: 20.0
+
+    # path 위를 이동하는 것처럼 보이게 할 선속도.
+    # 0.2m/s이면 1초에 20cm 이동한다.
+    linear_speed_mps: 0.1
+
+    # true이면 goal에 도착한 뒤 다시 첫 waypoint부터 반복한다.
+    loop_path: true
+
+    # loop_path=false일 때 goal에 도착하면 마지막 pose를 계속 publish한다.
+    hold_at_goal: true
+
+    # true이면 pose yaw를 현재 이동 segment 방향으로 계산한다.
+    # false이면 waypoint yaw_rad를 보간해서 사용한다.
+    use_segment_yaw: true
+
+    # 새로운 global path를 수신하면 처음 waypoint부터 다시 주행할지 여부.
+    reset_on_new_path: true
+
+    # true이면 publish되는 mock pose에 Gaussian noise를 추가한다.
+    # 내부 path 진행 상태에는 영향을 주지 않고, 최종 출력 pose에만 노이즈를 섞는다.
+    noise_enabled: true
+
+    # x, y 위치 노이즈 표준편차 [m]
+    # 0.03이면 대략 3cm 수준의 흔들림이다.
+    position_noise_std_m: 0.03
+
+    # yaw 노이즈 표준편차 [rad]
+    # 0.03rad는 약 1.7도 수준이다.
+    yaw_noise_std_rad: 0.03
+
+    # x, y 위치 노이즈 최대 절댓값 [m]
+    # 너무 큰 랜덤 값이 한 번 튀는 것을 막기 위한 clamp 값이다.
+    max_position_noise_m: 0.10
+
+    # yaw 노이즈 최대 절댓값 [rad]
+    max_yaw_noise_rad: 0.10
+
+    # 랜덤 seed.
+    # -1이면 실행할 때마다 다른 noise.
+    # 42처럼 0 이상의 값을 주면 매번 같은 noise 패턴으로 재현 가능하다.
+    noise_seed: 42

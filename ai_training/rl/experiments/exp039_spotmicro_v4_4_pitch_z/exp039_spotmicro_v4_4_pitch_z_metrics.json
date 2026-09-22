@@ -1,0 +1,30 @@
+{
+  "exp_id": 39,
+  "run_name": "spotmicro_v4_4_pitch_z",
+  "purpose": "V4.4: pitch/roll 에 따라 leg의 z값 보정, 균형 맞춰서 토크포화 감소 시도",
+  "timestamp": "2026-05-04T17:50:11.755769",
+  "metrics": {
+    "timeout_pct": 87.07482993197279,
+    "early_death_pct": 2.7210884353741496,
+    "vel_error_x": 0.037248194217681885,
+    "vel_error_y": 0.01954568736255169,
+    "ang_vel_error": 0.08786923438310623,
+    "torque_saturation_pct": 21.34861666111666,
+    "mean_height": 0.22176780316716943,
+    "height_std": 0.0014297504415114058,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.01793335953298725,
+    "mean_roll_deg": 1.6154558658599854,
+    "mean_pitch_deg": 2.4823739528656006,
+    "max_roll_deg": 9.415617942810059,
+    "max_pitch_deg": 12.245922088623047,
+    "mean_action_rate": 0.03232456371188164,
+    "max_action_rate": 0.6341792941093445,
+    "mean_power": 10.152070999145508,
+    "power_std": 1.7209413051605225,
+    "cost_of_transport": 2.1679089545628716,
+    "mean_episode_length": 882.1428571428571,
+    "mean_episode_return": 46.27430629755567,
+    "num_episodes": 147
+  }
+}

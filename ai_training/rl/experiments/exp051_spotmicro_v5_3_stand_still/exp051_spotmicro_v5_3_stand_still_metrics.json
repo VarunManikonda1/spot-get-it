@@ -1,0 +1,30 @@
+{
+  "exp_id": 51,
+  "run_name": "spotmicro_v5_3_stand_still",
+  "purpose": "V5.3: 정지상태 yaw 오차 감소",
+  "timestamp": "2026-05-12T11:03:26.195084",
+  "metrics": {
+    "timeout_pct": 89.5104895104895,
+    "early_death_pct": 2.797202797202797,
+    "vel_error_x": 0.04580022767186165,
+    "vel_error_y": 0.027541445568203926,
+    "ang_vel_error": 0.0888398066163063,
+    "torque_saturation_pct": 17.43408501221001,
+    "mean_height": 0.209021290907493,
+    "height_std": 0.0026627247975143154,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.020027035865196916,
+    "mean_roll_deg": 1.84149169921875,
+    "mean_pitch_deg": 2.5702359676361084,
+    "max_roll_deg": 5.773091793060303,
+    "max_pitch_deg": 6.068721771240234,
+    "mean_action_rate": 0.004276870749890804,
+    "max_action_rate": 0.1833440512418747,
+    "mean_power": 6.1257643699646,
+    "power_std": 1.4381604194641113,
+    "cost_of_transport": 2.0762818309275706,
+    "mean_episode_length": 912.6083916083916,
+    "mean_episode_return": 65.04521783425675,
+    "num_episodes": 143
+  }
+}

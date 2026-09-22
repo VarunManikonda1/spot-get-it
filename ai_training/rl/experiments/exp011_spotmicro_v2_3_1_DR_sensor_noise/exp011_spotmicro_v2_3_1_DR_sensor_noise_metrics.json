@@ -1,0 +1,30 @@
+{
+  "exp_id": 11,
+  "run_name": "spotmicro_v2_3_1_DR_sensor_noise",
+  "purpose": "V2.3.1: sigma값 낮춰서 노이즈 환경에서 성능이 좋아지는지 확인.",
+  "timestamp": "2026-04-27T14:18:49.911336",
+  "metrics": {
+    "timeout_pct": 100.0,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.052789486944675446,
+    "vel_error_y": 0.02150571532547474,
+    "ang_vel_error": 0.1075124591588974,
+    "torque_saturation_pct": 14.293172105672106,
+    "mean_height": 0.21895193883946368,
+    "height_std": 0.0018763897375762856,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.03410635447350372,
+    "mean_roll_deg": 1.4469703435897827,
+    "mean_pitch_deg": 0.8053951859474182,
+    "max_roll_deg": 5.557047367095947,
+    "max_pitch_deg": 6.10966682434082,
+    "mean_action_rate": 0.0034107849933207035,
+    "max_action_rate": 0.0800197497010231,
+    "mean_power": 8.543943405151367,
+    "power_std": 2.9134435653686523,
+    "cost_of_transport": 1.4693491817315465,
+    "mean_episode_length": 1001.5,
+    "mean_episode_return": 70.13499170541763,
+    "num_episodes": 128
+  }
+}

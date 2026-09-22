@@ -1,0 +1,30 @@
+{
+  "exp_id": 29,
+  "run_name": "spotmicro_v3_2_noise_order",
+  "purpose": "V3.2: observation 조정으로 인한 노이즈 함수 순서 조정 처리.",
+  "timestamp": "2026-04-29T13:55:27.114344",
+  "metrics": {
+    "timeout_pct": 96.2406015037594,
+    "early_death_pct": 0.7518796992481203,
+    "vel_error_x": 0.04619809612631798,
+    "vel_error_y": 0.022846009582281113,
+    "ang_vel_error": 0.07202443480491638,
+    "torque_saturation_pct": 20.29086365023865,
+    "mean_height": 0.20622781368640514,
+    "height_std": 0.0023553698058070434,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.026169108366570458,
+    "mean_roll_deg": 1.804773211479187,
+    "mean_pitch_deg": 1.6187095642089844,
+    "max_roll_deg": 6.684337139129639,
+    "max_pitch_deg": 6.581788539886475,
+    "mean_action_rate": 0.005046014674007893,
+    "max_action_rate": 1.4017385244369507,
+    "mean_power": 8.52746868133545,
+    "power_std": 2.717823028564453,
+    "cost_of_transport": 1.9451599304661273,
+    "mean_episode_length": 970.5112781954887,
+    "mean_episode_return": 71.00142000380315,
+    "num_episodes": 133
+  }
+}

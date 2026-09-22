@@ -1,0 +1,77 @@
+# C/C++
+build/
+bin/
+lib/
+*.o
+*.obj
+*.so
+*.dylib
+*.a
+*.dll
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+venv/
+.venv/
+.env
+
+# ROS / Colcon
+install/
+log/
+devel/
+
+# Qt
+*.pro.user
+*.ui.autosave
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+Makefile
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+*_autogen/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*~
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# --- Hand-written build files that the generic rules above would swallow ---
+!rpi/bridge_app/Makefile
+
+# --- Large binaries kept out of this mirror (see README "What is not here") ---
+# RL training checkpoints — regenerate with ai_training/rl/run_experiment.sh.
+# The deployed policies are the .onnx exports, which ARE tracked.
+*.pt
+*.pth
+# Blender sources for the sim meshes; the .stl/.dae the sim loads are tracked.
+*.blend
+*.blend1
+# Fusion 360 / STEP / STL CAD masters (>100 MB, Git LFS upstream).
+*.f3z
+*.f3d
+*.step
+*.stp
+*.3mf
+hardware/cad/
+
+# --- Training scratch ---
+checkpoints/
+runs/
+wandb/
+
+# Compiled bridge daemon artifacts
+rpi/bridge_app/bridge_daemon
+rpi/bridge_app/jetson_cmd_echo
+rpi/bridge_app/*_asan
+rpi/bridge_app/*_tsan

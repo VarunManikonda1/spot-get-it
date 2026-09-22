@@ -1,0 +1,30 @@
+{
+  "exp_id": 13,
+  "run_name": "spotmicro_v2_4_DR_servo_delay",
+  "purpose": "V2.4: 실제로 서보모터 응답의 지연을 이전 step의 액션을 적용하는 것으로 반영, 수치가 유지되는지 확인",
+  "timestamp": "2026-04-27T16:48:52.403503",
+  "metrics": {
+    "timeout_pct": 100.0,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.06099073588848114,
+    "vel_error_y": 0.022426022216677666,
+    "ang_vel_error": 0.12049461901187897,
+    "torque_saturation_pct": 12.862571456321456,
+    "mean_height": 0.21925304331384102,
+    "height_std": 0.0018580059493289696,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.0313160437064127,
+    "mean_roll_deg": 1.2587755918502808,
+    "mean_pitch_deg": 1.0201668739318848,
+    "max_roll_deg": 6.087632179260254,
+    "max_pitch_deg": 6.809837341308594,
+    "mean_action_rate": 0.003201621351763606,
+    "max_action_rate": 0.4344569742679596,
+    "mean_power": 8.261615753173828,
+    "power_std": 2.8673911094665527,
+    "cost_of_transport": 1.5338760196798364,
+    "mean_episode_length": 1001.5,
+    "mean_episode_return": 68.27585878968239,
+    "num_episodes": 128
+  }
+}

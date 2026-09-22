@@ -1,0 +1,34 @@
+obstacle_cluster_node:
+  ros__parameters:
+    # [cyglidar_d1 Spect]
+    # 수평 FOV: 120° (-60° ~ +60°)
+    # 수직 FOV: 65°
+    # 3D 해상도: 160 x 60 pixel
+    # 측정 속도: 15Hz 
+
+    # Cluster Parameter
+    cluster_tolerance: 0.15       # 15cm 이내 점들은 같은 물체로 묶음
+    min_cluster_size: 10          
+    max_cluster_size: 3000
+
+    # Sector Range
+    # base_link 기준 Front Range
+    front_min_deg: -30.0
+    front_max_deg:  30.0
+
+    # base_link 기준 Left Range
+    # LEFT: FOV 한계(60°)까지
+    left_min_deg: 30.0
+    left_max_deg: 60.0
+
+    # base_link 기준 Right Range
+    # RIGHT: FOV 한계(-60°)까지
+    right_min_deg: -60.0
+    right_max_deg: -30.0
+
+    # tracking parameters
+    tracking_enabled: true
+    color_by_track_id: true
+    tracking_match_distance: 0.40
+    tracking_max_missed_frames: 5
+    tracking_smoothing_alpha: 0.6

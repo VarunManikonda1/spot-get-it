@@ -1,0 +1,30 @@
+{
+  "exp_id": 28,
+  "run_name": "spotmicro_v3_1_3_PD_adjust",
+  "purpose": "V3.1.3: PD수치 조정을 통해 토크 포화 보정 시도.",
+  "timestamp": "2026-04-29T11:52:53.764654",
+  "metrics": {
+    "timeout_pct": 93.43065693430657,
+    "early_death_pct": 0.7299270072992701,
+    "vel_error_x": 0.047929797321558,
+    "vel_error_y": 0.02101409062743187,
+    "ang_vel_error": 0.09587715566158295,
+    "torque_saturation_pct": 18.958081848706847,
+    "mean_height": 0.20634219357064673,
+    "height_std": 0.0023274102791686208,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.02669626363637656,
+    "mean_roll_deg": 2.238065004348755,
+    "mean_pitch_deg": 2.4090890884399414,
+    "max_roll_deg": 5.984548091888428,
+    "max_pitch_deg": 5.655747413635254,
+    "mean_action_rate": 0.005998924840241671,
+    "max_action_rate": 0.6447785496711731,
+    "mean_power": 8.102069854736328,
+    "power_std": 2.669565439224243,
+    "cost_of_transport": 1.867986490869246,
+    "mean_episode_length": 952.4963503649635,
+    "mean_episode_return": 66.0247334853141,
+    "num_episodes": 137
+  }
+}

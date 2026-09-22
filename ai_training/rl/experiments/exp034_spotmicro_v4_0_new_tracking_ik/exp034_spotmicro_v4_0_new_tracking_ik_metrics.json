@@ -1,0 +1,30 @@
+{
+  "exp_id": 34,
+  "run_name": "spotmicro_v4_0_new_tracking_ik",
+  "purpose": "V4.0: tracking_ik 의 방식을 action에 따른 reward에서 직접 관절각도를 비교하는 방식으로 변경.",
+  "timestamp": "2026-05-04T11:02:46.117196",
+  "metrics": {
+    "timeout_pct": 94.81481481481482,
+    "early_death_pct": 2.2222222222222223,
+    "vel_error_x": 0.053437042981386185,
+    "vel_error_y": 0.020585058256983757,
+    "ang_vel_error": 0.10655348747968674,
+    "torque_saturation_pct": 18.785164488289492,
+    "mean_height": 0.1876316655488003,
+    "height_std": 0.0037160883804968955,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.019360420872402896,
+    "mean_roll_deg": 1.324427843093872,
+    "mean_pitch_deg": 2.6835718154907227,
+    "max_roll_deg": 4.554354667663574,
+    "max_pitch_deg": 5.32092809677124,
+    "mean_action_rate": 0.030830876901745796,
+    "max_action_rate": 0.9370802044868469,
+    "mean_power": 7.879738807678223,
+    "power_std": 2.0535976886749268,
+    "cost_of_transport": 2.171266618067217,
+    "mean_episode_length": 963.4740740740741,
+    "mean_episode_return": 46.24555899865098,
+    "num_episodes": 135
+  }
+}

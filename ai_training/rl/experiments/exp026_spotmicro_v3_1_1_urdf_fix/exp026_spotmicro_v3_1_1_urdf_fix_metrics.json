@@ -1,0 +1,30 @@
+{
+  "exp_id": 26,
+  "run_name": "spotmicro_v3_1_1_urdf_fix",
+  "purpose": "V3.1.1: urdf inertia 오류 수정.",
+  "timestamp": "2026-04-29T09:38:19.485927",
+  "metrics": {
+    "timeout_pct": 98.46153846153847,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.0496874637901783,
+    "vel_error_y": 0.026286838576197624,
+    "ang_vel_error": 0.14245633780956268,
+    "torque_saturation_pct": 20.527389277389275,
+    "mean_height": 0.19944453129282483,
+    "height_std": 0.0033506905789831474,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.023086173931208678,
+    "mean_roll_deg": 1.5365369319915771,
+    "mean_pitch_deg": 1.8635447025299072,
+    "max_roll_deg": 4.260802745819092,
+    "max_pitch_deg": 4.785256862640381,
+    "mean_action_rate": 0.006031809840351343,
+    "max_action_rate": 0.40516483783721924,
+    "mean_power": 8.259357452392578,
+    "power_std": 1.9969409704208374,
+    "cost_of_transport": 1.9957385826213385,
+    "mean_episode_length": 993.8384615384615,
+    "mean_episode_return": 65.57463349562425,
+    "num_episodes": 130
+  }
+}

@@ -1,0 +1,53 @@
+navigation_debug_visualizer_node:
+  ros__parameters:
+    # 시각화 대상 로봇 ID
+    # 다른 robot_id의 path/pose/progress가 들어오면 무시하거나 invalid 처리할 때 사용한다.
+    robot_id: "spot_01"
+
+    # RViz Fixed Frame과 맞출 공통 좌표계
+    # 현재 Navigation/Localization 기준은 mission_map이다.
+    global_frame: "mission_map"
+
+    # 입력 토픽: mock global path
+    # custom msg이므로 RViz에서 직접 볼 수 없어 nav_msgs/Path로 변환한다.
+    #global_path_topic: "/planning/mock_global_path/spot_01"
+    global_path_topic: "/planning/global_path/spot_01"
+    #global_path_topic: "/planning/global_path/spot_02"
+
+    # 입력 토픽: mock localization pose
+    # custom msg이므로 RViz에서 직접 볼 수 없어 geometry_msgs/PoseStamped로 변환한다.
+    #localization_pose_topic: "/localization/mock_pose"
+    localization_pose_topic: "/localization/pose"
+
+    # 입력 토픽: path progress
+    # nearest_index, target_index, goal_reached 등을 marker로 시각화한다.
+    path_progress_topic: "/navigation/path_progress/spot_01"
+
+    # 출력 토픽: RViz Path display용 global path
+    debug_global_path_topic: "/debug/navigation/global_path"
+
+    # 출력 토픽: RViz Pose display용 현재 mock pose
+    #debug_pose_topic: "/debug/navigation/mock_pose"
+    debug_pose_topic: "/debug/navigation/pose"
+
+    # 출력 토픽: RViz MarkerArray display용 nearest/target/goal/text marker
+    debug_marker_topic: "/debug/navigation/progress_markers"
+
+    # Marker namespace
+    marker_namespace: "navigation_debug"
+
+    # nearest/target/goal marker 구체 크기 [m]
+    waypoint_marker_scale_m: 0.18
+
+    # 현재 pose -> target point를 잇는 line marker 두께 [m]
+    target_line_width_m: 0.04
+
+    # 진행 상태 text marker 크기 [m]
+    text_marker_scale_m: 0.25
+
+    # marker lifetime [sec]
+    # 0.0이면 지워지지 않고 계속 갱신된다.
+    marker_lifetime_sec: 0.0
+    
+    # nearest/target/goal marker를 지도 평면보다 살짝 위에 띄울 높이 [m]
+    marker_z_m: 0.15

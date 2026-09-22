@@ -1,0 +1,60 @@
+local_occupancy_grid_node:
+  ros__parameters:
+    # 현재 파라미터 기준 grid 범위
+    # x: -0.5m ~ 4.0m
+    # y: -2.5m ~ 2.5m
+    # resolution: 10cm
+    # width: 45
+    # height: 50
+
+    input_topic: "/perception/lidar/points_filtered"
+    output_topic: "/perception/lidar/local_occupancy_grid"
+
+    # 현재 points_filtered가 base_link 기준이므로 grid도 base_link 기준으로 생성
+    frame_id: "base_link"
+
+    # base_link 기준 Local grid 영역
+    # OccupancyGrid origin은 grid의 왼쪽 아래 기준점
+    # x+ : Spot 전방 / y+ : Spot 좌측
+    origin_x: -0.5      # 뒤쪽 0.5m 부터
+    origin_y: -2.5      # 왼쪽 2.5m 부터
+
+    # grid 실제 크기 [m]
+    # x : -0.5m ~ 4.0m
+    # y : -2.5m ~ 2.5m
+    size_x: 4.5        # 앞쪽 4.0m 까지
+    size_y: 5.0        # 오른쪽 2.5m 까지
+
+    # grid cell 하나의 크기 [m/cell]
+    # 0.10 = 10cm x 10cm
+    resolution: 0.10
+
+    # OccupancyGrid cell 값
+    unknown_value: -1
+    free_value: 0
+    occupied_value: 100
+
+    # grid 변환 시 한 번 더 적용 (z 필터)
+    # 바닥점이 많이 잡히면 min_z를 0.00 또는 0.05로 올리기
+    min_z: -0.10
+    max_z: 1.20
+
+    # 로봇 중심 기준 거리 필터
+    min_range: 0.10
+    max_range: 4.50
+
+    # Ray tracing 사용 여부
+    # true이면 전체 unknown 초기화 후, LiDAR ray 경로만 free로 표시한다.
+    use_ray_tracing: true
+    
+    # Ray 시작점
+    # 현재 points_filtered는 base_link 기준이므로,
+    # LiDAR 센서가 base_link에서 어느 위치에 있는지 넣는다.
+    # 기존 static TF 기준 예시: x=0.14, y=0.0
+    sensor_origin_x: 0.14
+    sensor_origin_y: 0.0
+
+    # obstacle inflation
+    # 장애물 주변을 조금 부풀려서 안전 여유를 반영한다
+    inflate_obstacles: true
+    inflation_radius: 0.10

@@ -1,0 +1,792 @@
+/*
+ * Knee Tilt Sweep — Auto Find Balance Point
+ *
+ * 4가지 KNEE_TILT_DEG 값 자동 시도: {0, 5, 10, 15}
+ *
+ * 각 값에서:
+ *   1. transition (이전 자세 → 새 자세)
+ *   2. 5초 settling
+ *   3. 5초 측정 (1초마다, 12 servo load + IMU)
+ *
+ * 최종 비교 표:
+ *   - 어느 tilt가 Front:Rear 50:50에 가장 가까운지
+ *   - 그 자세의 IMU pitch/roll = mounting offset
+ *
+ * IMUPLUS 모드 (자기 간섭 면역).
+ *
+ * 정지: ESC
+ */
+
+/* ===== Default pose ===== */
+#define HIP_OFFSET           0
+#define THIGH_OFFSET      (-512)
+#define KNEE_OFFSET       (+1024)
+#define ZERO_POS           2048
+
+#define SPEED_DEG_PER_SEC    20
+#define STEP_MS              25
+#define MIN_TRANSITION_MS    100
+
+#define COUNTDOWN_SEC        3
+#define SETTLE_MS            5000
+#define MEASURE_MS           5000
+#define MEASURE_INTERVAL_MS  1000
+#define POLL_PERIOD_MS       10
+#define ESC_KEY              0x1B
+
+/* ===== STS 프로토콜 ===== */
+#define HEADER1                 0xFF
+#define HEADER2                 0xFF
+#define BROADCAST_ID            0xFE
+#define INST_PING               0x01
+#define INST_READ               0x02
+#define INST_WRITE              0x03
+#define INST_SYNC_WRITE         0x83
+#define REG_TORQUE_ENABLE       0x28
+#define REG_GOAL_POSITION       0x2A
+#define REG_PRESENT_POSITION    0x38
+#define READ_BYTES              8
+#define READ_RESP_LEN_BYTE      (READ_BYTES + 2)
+#define ACK_LEN_BYTE            2
+#define TIMEOUT_MS              30
+
+#define NUM_LEGS         4
+#define SERVOS_PER_LEG   3
+#define NUM_SERVOS       (NUM_LEGS * SERVOS_PER_LEG)
+
+#define IDX_FL  0
+#define IDX_FR  1
+#define IDX_RL  2
+#define IDX_RR  3
+
+/* ===== BNO055 ===== */
+#define BNO055_I2C_ADDR_DEFAULT   0x28
+#define BNO055_I2C_ADDR_ALT       0x29
+#define BNO055_CHIP_ID            0x00
+#define BNO055_EUL_HEADING_LSB    0x1A
+#define BNO055_CALIB_STAT         0x35
+#define BNO055_OPR_MODE           0x3D
+#define BNO055_OPR_CONFIG         0x00
+#define BNO055_OPR_IMUPLUS        0x08
+#define BNO055_CHIP_ID_EXPECTED   0xA0
+
+#include "stm32f4xx_hal.h"
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+#include <math.h>
+
+typedef struct {
+    UART_HandleTypeDef *huart;
+    const char *leg_name;
+    uint8_t servo_ids[SERVOS_PER_LEG];
+    int8_t sign;
+} leg_t;
+
+UART_HandleTypeDef huart3, huart4, huart5, huart6;
+UART_HandleTypeDef huart2;
+I2C_HandleTypeDef hi2c1;
+
+static leg_t legs[NUM_LEGS] = {
+    { &huart6, "FL", { 1,  2,  3}, +1 },
+    { &huart4, "FR", { 4,  5,  6}, -1 },
+    { &huart5, "RL", { 7,  8,  9}, +1 },
+    { &huart3, "RR", {10, 11, 12}, -1 }
+};
+
+typedef uint16_t pose_t[NUM_LEGS][SERVOS_PER_LEG];
+
+typedef struct {
+    bool ok;
+    uint16_t position;
+    uint16_t load;
+} read_result_t;
+
+typedef struct { bool ok; } write_result_t;
+
+typedef struct { float yaw; float pitch; float roll; } body_attitude_t;
+
+/* Sweep 값 */
+static const int tilt_values[] = {0, 5, 10, 15};
+#define NUM_TILTS  (sizeof(tilt_values) / sizeof(tilt_values[0]))
+
+typedef struct {
+    int tilt_deg;
+    int knee_avg[NUM_LEGS];
+    float pitch_avg;
+    float roll_avg;
+    int n_samples;
+} trial_result_t;
+
+static trial_result_t results[NUM_TILTS];
+static uint8_t bno_addr = BNO055_I2C_ADDR_DEFAULT;
+
+static void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_UART4_HDSEL_Init(void);
+static void MX_USART3_HDSEL_Init(void);
+static void MX_USART6_HDSEL_Init(void);
+static void MX_UART5_HDSEL_Init(void);
+static void MX_USART2_Init(void);
+static void MX_I2C1_Init(void);
+void Error_Handler(void);
+
+static uint8_t calc_checksum(const uint8_t *buf, uint8_t len);
+static bool sts_ping(UART_HandleTypeDef *huart, uint8_t id);
+static read_result_t sts_read_state(UART_HandleTypeDef *huart, uint8_t id);
+static write_result_t sts_write_byte(UART_HandleTypeDef *huart, uint8_t id, uint8_t addr, uint8_t val);
+static bool sts_sync_write_goal(UART_HandleTypeDef *huart,
+                                const uint8_t *ids, const uint16_t *goals, uint8_t count);
+
+int _write(int file, char *ptr, int len) {
+    (void)file;
+    HAL_UART_Transmit(&huart2, (uint8_t *)ptr, len, HAL_MAX_DELAY);
+    return len;
+}
+
+static int abs_int(int x) { return x < 0 ? -x : x; }
+
+static float smoothstep(float t) {
+    return t * t * (3.0f - 2.0f * t);
+}
+
+/* ============================================================ */
+/* ESC                                                          */
+/* ============================================================ */
+
+static bool check_esc(void) {
+    if (huart2.Instance->SR & USART_SR_RXNE) {
+        uint8_t ch = (uint8_t)(huart2.Instance->DR & 0xFF);
+        if (ch == ESC_KEY) return true;
+    }
+    return false;
+}
+
+static void torque_off_all(void) {
+    for (int l = 0; l < NUM_LEGS; l++) {
+        for (int j = 0; j < SERVOS_PER_LEG; j++) {
+            sts_write_byte(legs[l].huart, legs[l].servo_ids[j],
+                           REG_TORQUE_ENABLE, 0);
+        }
+    }
+}
+
+static void emergency_stop(void) {
+    printf("\r\n*** ESC pressed — torque OFF, halted ***\r\n");
+    torque_off_all();
+    while (1) {}
+}
+
+static void delay_with_estop(uint32_t ms) {
+    uint32_t start = HAL_GetTick();
+    while (HAL_GetTick() - start < ms) {
+        if (check_esc()) emergency_stop();
+        HAL_Delay(POLL_PERIOD_MS);
+    }
+}
+
+/* ============================================================ */
+/* BNO055 IMUPLUS                                               */
+/* ============================================================ */
+
+static bool bno_read_byte(uint8_t reg, uint8_t* val) {
+    return (HAL_I2C_Mem_Read(&hi2c1, bno_addr << 1, reg,
+                             I2C_MEMADD_SIZE_8BIT, val, 1, 100) == HAL_OK);
+}
+
+static bool bno_write_byte(uint8_t reg, uint8_t val) {
+    return (HAL_I2C_Mem_Write(&hi2c1, bno_addr << 1, reg,
+                              I2C_MEMADD_SIZE_8BIT, &val, 1, 100) == HAL_OK);
+}
+
+static bool bno_read_bytes(uint8_t reg, uint8_t* buf, uint8_t len) {
+    return (HAL_I2C_Mem_Read(&hi2c1, bno_addr << 1, reg,
+                             I2C_MEMADD_SIZE_8BIT, buf, len, 100) == HAL_OK);
+}
+
+static bool bno_init_imuplus(void) {
+    HAL_Delay(700);
+
+    if (HAL_I2C_IsDeviceReady(&hi2c1, BNO055_I2C_ADDR_DEFAULT << 1, 3, 50) == HAL_OK) {
+        bno_addr = BNO055_I2C_ADDR_DEFAULT;
+    } else if (HAL_I2C_IsDeviceReady(&hi2c1, BNO055_I2C_ADDR_ALT << 1, 3, 50) == HAL_OK) {
+        bno_addr = BNO055_I2C_ADDR_ALT;
+    } else {
+        return false;
+    }
+
+    uint8_t chip_id = 0;
+    if (!bno_read_byte(BNO055_CHIP_ID, &chip_id) || chip_id != BNO055_CHIP_ID_EXPECTED) {
+        return false;
+    }
+
+    bno_write_byte(BNO055_OPR_MODE, BNO055_OPR_CONFIG);
+    HAL_Delay(25);
+    bno_write_byte(BNO055_OPR_MODE, BNO055_OPR_IMUPLUS);
+    HAL_Delay(20);
+    return true;
+}
+
+static bool bno_read_body(body_attitude_t* body) {
+    uint8_t buf[6];
+    if (!bno_read_bytes(BNO055_EUL_HEADING_LSB, buf, 6)) return false;
+
+    int16_t h_raw = (int16_t)((uint16_t)buf[0] | ((uint16_t)buf[1] << 8));
+    int16_t r_raw = (int16_t)((uint16_t)buf[2] | ((uint16_t)buf[3] << 8));
+    int16_t p_raw = (int16_t)((uint16_t)buf[4] | ((uint16_t)buf[5] << 8));
+
+    body->yaw   = h_raw / 16.0f;
+    body->pitch = -(r_raw / 16.0f);
+    body->roll  = -(p_raw / 16.0f);
+    return true;
+}
+
+/* ============================================================ */
+/* Pose with KNEE_TILT_DEG                                      */
+/* ============================================================ */
+
+static void compute_default_pose_tilt(pose_t pose, int tilt_deg) {
+    int tilt_unit = tilt_deg * 4096 / 360;
+    for (int l = 0; l < NUM_LEGS; l++) {
+        int8_t s = legs[l].sign;
+        bool is_front = (l == IDX_FL || l == IDX_FR);
+        int knee_off = is_front
+            ? (KNEE_OFFSET + tilt_unit)   /* 앞: 더 굽힘 */
+            : (KNEE_OFFSET - tilt_unit);  /* 뒤: 덜 굽힘 */
+        pose[l][0] = ZERO_POS + s * HIP_OFFSET;
+        pose[l][1] = ZERO_POS + s * THIGH_OFFSET;
+        pose[l][2] = ZERO_POS + s * knee_off;
+    }
+}
+
+static void apply_pose_all(const pose_t pose) {
+    for (int l = 0; l < NUM_LEGS; l++) {
+        sts_sync_write_goal(legs[l].huart, legs[l].servo_ids,
+                            pose[l], SERVOS_PER_LEG);
+    }
+}
+
+static void transition_all(const pose_t from, const pose_t to) {
+    int max_delta = 0;
+    for (int l = 0; l < NUM_LEGS; l++) {
+        for (int j = 0; j < SERVOS_PER_LEG; j++) {
+            int d = abs_int((int)to[l][j] - (int)from[l][j]);
+            if (d > max_delta) max_delta = d;
+        }
+    }
+    if (max_delta == 0) return;
+
+    int speed_unit_per_sec = SPEED_DEG_PER_SEC * 4096 / 360;
+    uint32_t total_ms = (uint32_t)max_delta * 1000 / (uint32_t)speed_unit_per_sec;
+    if (total_ms < MIN_TRANSITION_MS) total_ms = MIN_TRANSITION_MS;
+
+    int steps = (int)(total_ms / STEP_MS);
+    if (steps < 4) steps = 4;
+
+    for (int step = 1; step <= steps; step++) {
+        if (check_esc()) emergency_stop();
+        float linear_t = (float)step / steps;
+        float ratio = smoothstep(linear_t);
+        pose_t goals;
+        for (int l = 0; l < NUM_LEGS; l++) {
+            for (int j = 0; j < SERVOS_PER_LEG; j++) {
+                int delta = (int)to[l][j] - (int)from[l][j];
+                goals[l][j] = (uint16_t)((int)from[l][j] + (int)(delta * ratio));
+            }
+        }
+        apply_pose_all(goals);
+        HAL_Delay(STEP_MS);
+    }
+}
+
+/* ============================================================ */
+/* Trial 실행                                                   */
+/* ============================================================ */
+
+static void run_trial(int trial_idx, const pose_t prev_pose, pose_t out_pose) {
+    int tilt = tilt_values[trial_idx];
+    pose_t target;
+    compute_default_pose_tilt(target, tilt);
+
+    printf("\r\n=================================================\r\n");
+    printf(" TRIAL %d/%d : KNEE_TILT_DEG = %d\r\n",
+           trial_idx + 1, (int)NUM_TILTS, tilt);
+    printf("=================================================\r\n");
+
+    /* Transition */
+    printf("    Transitioning...\r\n");
+    transition_all(prev_pose, target);
+
+    /* Settle */
+    printf("    Settling %d ms...\r\n", SETTLE_MS);
+    delay_with_estop(SETTLE_MS);
+
+    /* Measure */
+    printf("    Measuring %d ms...\r\n", MEASURE_MS);
+    trial_result_t* r = &results[trial_idx];
+    r->tilt_deg = tilt;
+    r->n_samples = 0;
+    float pitch_sum = 0.0f, roll_sum = 0.0f;
+    int knee_sum[NUM_LEGS] = {0};
+
+    int n_samples = MEASURE_MS / MEASURE_INTERVAL_MS;
+    for (int s = 0; s < n_samples; s++) {
+        if (check_esc()) emergency_stop();
+        HAL_Delay(MEASURE_INTERVAL_MS);
+
+        /* 12 servos */
+        for (int l = 0; l < NUM_LEGS; l++) {
+            for (int j = 0; j < SERVOS_PER_LEG; j++) {
+                read_result_t rr = sts_read_state(legs[l].huart, legs[l].servo_ids[j]);
+                if (rr.ok && j == 2) {
+                    knee_sum[l] += (rr.load & 0x3FF);
+                }
+            }
+        }
+
+        /* IMU */
+        body_attitude_t b;
+        if (bno_read_body(&b)) {
+            pitch_sum += b.pitch;
+            roll_sum  += b.roll;
+        }
+
+        r->n_samples++;
+        printf("      sample %d/%d\r\n", s + 1, n_samples);
+    }
+
+    for (int l = 0; l < NUM_LEGS; l++) {
+        r->knee_avg[l] = knee_sum[l] / r->n_samples;
+    }
+    r->pitch_avg = pitch_sum / r->n_samples;
+    r->roll_avg  = roll_sum  / r->n_samples;
+
+    /* Quick result */
+    int front = r->knee_avg[IDX_FL] + r->knee_avg[IDX_FR];
+    int rear  = r->knee_avg[IDX_RL] + r->knee_avg[IDX_RR];
+    int total = front + rear;
+    printf("\r\n    -- TRIAL %d RESULT --\r\n", trial_idx + 1);
+    printf("    Knee load: FL=%d FR=%d RL=%d RR=%d\r\n",
+           r->knee_avg[IDX_FL], r->knee_avg[IDX_FR],
+           r->knee_avg[IDX_RL], r->knee_avg[IDX_RR]);
+    if (total > 0) {
+        printf("    Front:Rear = %d:%d  (%.1f%% : %.1f%%)\r\n",
+               front, rear,
+               100.0f * front / total, 100.0f * rear / total);
+        printf("    d/L = %+.3f  (estimated d = %+.1f mm)\r\n",
+               0.5f - (float)front / total,
+               (0.5f - (float)front / total) * 180.0f);
+    }
+    printf("    IMU pitch = %+.2f deg, roll = %+.2f deg\r\n",
+           r->pitch_avg, r->roll_avg);
+
+    memcpy(out_pose, target, sizeof(pose_t));
+}
+
+/* ============================================================ */
+/* 최종 비교 표 + 균형점 추정                                    */
+/* ============================================================ */
+
+static void print_summary(void) {
+    printf("\r\n");
+    printf("=================================================\r\n");
+    printf("  SWEEP SUMMARY\r\n");
+    printf("=================================================\r\n");
+    printf("\r\n");
+    printf("  Tilt | Front%%  Rear%%  d/L      d(mm) | IMU pitch  IMU roll\r\n");
+    printf("  -----+--------------------------------+-------------------\r\n");
+
+    int best_idx = 0;
+    float best_abs_d = 1e9f;
+
+    for (int i = 0; i < (int)NUM_TILTS; i++) {
+        trial_result_t* r = &results[i];
+        int front = r->knee_avg[IDX_FL] + r->knee_avg[IDX_FR];
+        int rear  = r->knee_avg[IDX_RL] + r->knee_avg[IDX_RR];
+        int total = front + rear;
+        float front_pct = (total > 0) ? 100.0f * front / total : 0.0f;
+        float rear_pct  = (total > 0) ? 100.0f * rear  / total : 0.0f;
+        float d_over_L  = (total > 0) ? 0.5f - (float)front / total : 0.0f;
+        float d_mm      = d_over_L * 180.0f;
+
+        printf("  %3d  | %5.1f   %5.1f  %+.3f  %+5.1f | %+6.2f    %+6.2f\r\n",
+               r->tilt_deg, front_pct, rear_pct, d_over_L, d_mm,
+               r->pitch_avg, r->roll_avg);
+
+        if (fabsf(d_over_L) < best_abs_d) {
+            best_abs_d = fabsf(d_over_L);
+            best_idx = i;
+        }
+    }
+
+    printf("\r\n");
+    printf("  Best balance: KNEE_TILT_DEG = %d (|d/L| = %.3f)\r\n",
+           results[best_idx].tilt_deg, best_abs_d);
+    printf("\r\n");
+    printf("  IMU offset at balance point:\r\n");
+    printf("    pitch_offset = %+.2f deg\r\n", results[best_idx].pitch_avg);
+    printf("    roll_offset  = %+.2f deg\r\n", results[best_idx].roll_avg);
+    printf("\r\n");
+    printf("  Use these values:\r\n");
+    printf("    #define IMU_OFFSET_PITCH  %+.2ff\r\n", results[best_idx].pitch_avg);
+    printf("    #define IMU_OFFSET_ROLL   %+.2ff\r\n", results[best_idx].roll_avg);
+    printf("    real_pitch = imu_pitch - IMU_OFFSET_PITCH;\r\n");
+    printf("=================================================\r\n");
+}
+
+/* ============================================================ */
+/* MAIN                                                         */
+/* ============================================================ */
+
+int main(void) {
+    HAL_Init();
+    SystemClock_Config();
+    MX_GPIO_Init();
+    MX_USART2_Init();
+    MX_UART4_HDSEL_Init();
+    MX_USART6_HDSEL_Init();
+    MX_USART3_HDSEL_Init();
+    MX_UART5_HDSEL_Init();
+    MX_I2C1_Init();
+    HAL_Delay(200);
+
+    printf("\r\n=== STM32F446RE Boot ===\r\n");
+    printf("\r\n=================================================\r\n");
+    printf("  Knee Tilt Sweep — Auto Find Balance Point\r\n");
+    printf("  IMUPLUS mode (mag OFF, immune to magnetic noise)\r\n");
+    printf("\r\n");
+    printf("  Trying %d tilt values: ", (int)NUM_TILTS);
+    for (int i = 0; i < (int)NUM_TILTS; i++) {
+        printf("%d ", tilt_values[i]);
+    }
+    printf("\r\n");
+    printf("\r\n");
+    printf("  Total time: ~%d sec\r\n",
+           (int)(NUM_TILTS * (SETTLE_MS + MEASURE_MS + 2000) / 1000));
+    printf("  >>> DO NOT TOUCH the robot during entire sweep <<<\r\n");
+    printf("=================================================\r\n");
+
+    printf("\r\n[1] Pinging 12 servos...\r\n");
+    int alive = 0;
+    for (int l = 0; l < NUM_LEGS; l++) {
+        for (int j = 0; j < SERVOS_PER_LEG; j++) {
+            if (sts_ping(legs[l].huart, legs[l].servo_ids[j])) alive++;
+            HAL_Delay(5);
+        }
+    }
+    printf("    %d / %d alive\r\n", alive, NUM_SERVOS);
+    if (alive < NUM_SERVOS) { while (1) {} }
+
+    printf("\r\n[2] BNO055 IMUPLUS init...\r\n");
+    if (!bno_init_imuplus()) { printf("[ABORT]\r\n"); while (1) {} }
+    printf("    OK.\r\n");
+
+    printf("\r\n[3] Torque OFF...\r\n");
+    torque_off_all();
+
+    printf("\r\n[4] Starting in %d s — robot on flat surface\r\n", COUNTDOWN_SEC);
+    for (int i = COUNTDOWN_SEC; i > 0; i--) {
+        printf("    %d...\r\n", i);
+        delay_with_estop(1000);
+    }
+
+    pose_t start_pose;
+    for (int l = 0; l < NUM_LEGS; l++) {
+        for (int j = 0; j < SERVOS_PER_LEG; j++) {
+            read_result_t r = sts_read_state(legs[l].huart, legs[l].servo_ids[j]);
+            if (!r.ok) { while (1) {} }
+            start_pose[l][j] = r.position;
+        }
+    }
+    apply_pose_all(start_pose);
+    delay_with_estop(50);
+
+    printf("\r\n[5] Torque ON 12 servos...\r\n");
+    for (int l = 0; l < NUM_LEGS; l++) {
+        for (int j = 0; j < SERVOS_PER_LEG; j++) {
+            sts_write_byte(legs[l].huart, legs[l].servo_ids[j],
+                           REG_TORQUE_ENABLE, 1);
+        }
+    }
+    delay_with_estop(300);
+
+    /* === SWEEP === */
+    pose_t prev_pose;
+    memcpy(prev_pose, start_pose, sizeof(pose_t));
+
+    for (int i = 0; i < (int)NUM_TILTS; i++) {
+        pose_t this_pose;
+        run_trial(i, prev_pose, this_pose);
+        memcpy(prev_pose, this_pose, sizeof(pose_t));
+    }
+
+    /* === SUMMARY === */
+    print_summary();
+
+    /* === Return to start === */
+    printf("\r\n[Final] Returning to start...\r\n");
+    transition_all(prev_pose, start_pose);
+
+    printf("\r\n[Final] Torque OFF.\r\n");
+    torque_off_all();
+
+    printf("\r\n=== TEST COMPLETE ===\r\n");
+
+    while (1) {
+        if (check_esc()) emergency_stop();
+        HAL_Delay(POLL_PERIOD_MS);
+    }
+}
+
+/* ============================================================ */
+/* STS 프로토콜                                                 */
+/* ============================================================ */
+
+static uint8_t calc_checksum(const uint8_t *buf, uint8_t len) {
+    uint16_t sum = 0;
+    for (uint8_t i = 2; i < len - 1; i++) sum += buf[i];
+    return (uint8_t)(~sum & 0xFF);
+}
+
+static bool sts_ping(UART_HandleTypeDef *huart, uint8_t id) {
+    uint8_t pkt[6];
+    pkt[0] = HEADER1; pkt[1] = HEADER2; pkt[2] = id;
+    pkt[3] = 2; pkt[4] = INST_PING;
+    pkt[5] = calc_checksum(pkt, 6);
+    if (HAL_UART_Transmit(huart, pkt, 6, 50) != HAL_OK) return false;
+
+    uint8_t raw[7] = {0};
+    HAL_UART_Receive(huart, raw, 7, TIMEOUT_MS);
+    uint16_t received = 7 - huart->RxXferCount;
+    if (received < 6) return false;
+
+    for (int off = 0; off + 5 < received; off++) {
+        if (raw[off] == HEADER1 && raw[off+1] == HEADER2
+            && raw[off+2] == id && raw[off+3] == 2) {
+            uint8_t resp[6];
+            memcpy(resp, &raw[off], 6);
+            if (resp[5] == calc_checksum(resp, 6) && resp[4] == 0) return true;
+        }
+    }
+    return false;
+}
+
+static read_result_t sts_read_state(UART_HandleTypeDef *huart, uint8_t id) {
+    read_result_t r = {0};
+    uint8_t req[8];
+    req[0] = HEADER1; req[1] = HEADER2; req[2] = id;
+    req[3] = 4; req[4] = INST_READ;
+    req[5] = REG_PRESENT_POSITION; req[6] = READ_BYTES;
+    req[7] = calc_checksum(req, 8);
+
+    if (HAL_UART_Transmit(huart, req, 8, 50) != HAL_OK) return r;
+
+    uint8_t raw[15] = {0};
+    HAL_UART_Receive(huart, raw, 15, TIMEOUT_MS);
+    uint16_t received = 15 - huart->RxXferCount;
+    if (received < 14) return r;
+
+    for (int off = 0; off + 13 < received; off++) {
+        if (raw[off] == HEADER1 && raw[off+1] == HEADER2
+            && raw[off+2] == id && raw[off+3] == READ_RESP_LEN_BYTE) {
+            uint8_t resp[14];
+            memcpy(resp, &raw[off], 14);
+            if (resp[13] == calc_checksum(resp, 14)) {
+                r.position = resp[5]  | ((uint16_t)resp[6]  << 8);
+                r.load     = resp[9]  | ((uint16_t)resp[10] << 8);
+                r.ok       = (resp[4] == 0);
+                return r;
+            }
+        }
+    }
+    return r;
+}
+
+static write_result_t sts_write_byte(UART_HandleTypeDef *huart, uint8_t id, uint8_t addr, uint8_t val) {
+    write_result_t r = {0};
+    uint8_t req[8];
+    req[0] = HEADER1; req[1] = HEADER2; req[2] = id;
+    req[3] = 4; req[4] = INST_WRITE;
+    req[5] = addr; req[6] = val;
+    req[7] = calc_checksum(req, 8);
+
+    if (HAL_UART_Transmit(huart, req, 8, 50) != HAL_OK) return r;
+
+    uint8_t raw[7] = {0};
+    HAL_UART_Receive(huart, raw, 7, TIMEOUT_MS);
+    uint16_t received = 7 - huart->RxXferCount;
+    if (received < 6) return r;
+
+    for (int off = 0; off + 5 < received; off++) {
+        if (raw[off] == HEADER1 && raw[off+1] == HEADER2
+            && raw[off+2] == id && raw[off+3] == ACK_LEN_BYTE) {
+            uint8_t resp[6];
+            memcpy(resp, &raw[off], 6);
+            if (resp[5] == calc_checksum(resp, 6)) {
+                r.ok = (resp[4] == 0);
+                return r;
+            }
+        }
+    }
+    return r;
+}
+
+static bool sts_sync_write_goal(UART_HandleTypeDef *huart,
+                                const uint8_t *ids, const uint16_t *goals, uint8_t count) {
+    if (count == 0 || count > 12) return false;
+
+    uint8_t pkt[8 + 12 * 3];
+    uint8_t len_field = (1 + 2) * count + 4;
+
+    pkt[0] = HEADER1; pkt[1] = HEADER2; pkt[2] = BROADCAST_ID;
+    pkt[3] = len_field; pkt[4] = INST_SYNC_WRITE;
+    pkt[5] = REG_GOAL_POSITION; pkt[6] = 2;
+
+    for (uint8_t i = 0; i < count; i++) {
+        pkt[7 + i*3 + 0] = ids[i];
+        pkt[7 + i*3 + 1] = goals[i] & 0xFF;
+        pkt[7 + i*3 + 2] = (goals[i] >> 8) & 0xFF;
+    }
+
+    uint8_t total_len = 8 + count * 3;
+    pkt[total_len - 1] = calc_checksum(pkt, total_len);
+
+    return (HAL_UART_Transmit(huart, pkt, total_len, 50) == HAL_OK);
+}
+
+/* ============================================================ */
+/* 시스템 / GPIO / I2C / UART 초기화                            */
+/* ============================================================ */
+
+static void SystemClock_Config(void) {
+    RCC_OscInitTypeDef osc = {0};
+    RCC_ClkInitTypeDef clk = {0};
+    __HAL_RCC_PWR_CLK_ENABLE();
+    __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+    osc.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+    osc.HSIState = RCC_HSI_ON;
+    osc.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+    osc.PLL.PLLState = RCC_PLL_ON;
+    osc.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+    osc.PLL.PLLM = 8; osc.PLL.PLLN = 180;
+    osc.PLL.PLLP = RCC_PLLP_DIV2; osc.PLL.PLLQ = 4; osc.PLL.PLLR = 2;
+    if (HAL_RCC_OscConfig(&osc) != HAL_OK) Error_Handler();
+    if (HAL_PWREx_EnableOverDrive() != HAL_OK) Error_Handler();
+    clk.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+    clk.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+    clk.AHBCLKDivider = RCC_SYSCLK_DIV1;
+    clk.APB1CLKDivider = RCC_HCLK_DIV4;
+    clk.APB2CLKDivider = RCC_HCLK_DIV2;
+    if (HAL_RCC_ClockConfig(&clk, FLASH_LATENCY_5) != HAL_OK) Error_Handler();
+}
+
+static void MX_GPIO_Init(void) {
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    __HAL_RCC_GPIOD_CLK_ENABLE();
+    __HAL_RCC_GPIOH_CLK_ENABLE();
+}
+
+static void MX_I2C1_Init(void) {
+    __HAL_RCC_I2C1_CLK_ENABLE();
+    GPIO_InitTypeDef gp = {0};
+    gp.Pin = GPIO_PIN_6 | GPIO_PIN_7;
+    gp.Mode = GPIO_MODE_AF_OD;
+    gp.Pull = GPIO_PULLUP;
+    gp.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    gp.Alternate = GPIO_AF4_I2C1;
+    HAL_GPIO_Init(GPIOB, &gp);
+
+    hi2c1.Instance = I2C1;
+    hi2c1.Init.ClockSpeed = 400000;
+    hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+    hi2c1.Init.OwnAddress1 = 0;
+    hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+    hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+    hi2c1.Init.OwnAddress2 = 0;
+    hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+    hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+    if (HAL_I2C_Init(&hi2c1) != HAL_OK) Error_Handler();
+}
+
+static void MX_UART4_HDSEL_Init(void) {
+    __HAL_RCC_UART4_CLK_ENABLE();
+    GPIO_InitTypeDef gp = {0};
+    gp.Pin = GPIO_PIN_0; gp.Mode = GPIO_MODE_AF_OD; gp.Pull = GPIO_NOPULL;
+    gp.Speed = GPIO_SPEED_FREQ_VERY_HIGH; gp.Alternate = GPIO_AF8_UART4;
+    HAL_GPIO_Init(GPIOA, &gp);
+    huart4.Instance = UART4;
+    huart4.Init.BaudRate = 1000000; huart4.Init.WordLength = UART_WORDLENGTH_8B;
+    huart4.Init.StopBits = UART_STOPBITS_1; huart4.Init.Parity = UART_PARITY_NONE;
+    huart4.Init.Mode = UART_MODE_TX_RX; huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+    if (HAL_HalfDuplex_Init(&huart4) != HAL_OK) Error_Handler();
+}
+
+static void MX_USART6_HDSEL_Init(void) {
+    __HAL_RCC_USART6_CLK_ENABLE();
+    GPIO_InitTypeDef gp = {0};
+    gp.Pin = GPIO_PIN_6; gp.Mode = GPIO_MODE_AF_OD; gp.Pull = GPIO_NOPULL;
+    gp.Speed = GPIO_SPEED_FREQ_VERY_HIGH; gp.Alternate = GPIO_AF8_USART6;
+    HAL_GPIO_Init(GPIOC, &gp);
+    huart6.Instance = USART6;
+    huart6.Init.BaudRate = 1000000; huart6.Init.WordLength = UART_WORDLENGTH_8B;
+    huart6.Init.StopBits = UART_STOPBITS_1; huart6.Init.Parity = UART_PARITY_NONE;
+    huart6.Init.Mode = UART_MODE_TX_RX; huart6.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    huart6.Init.OverSampling = UART_OVERSAMPLING_16;
+    if (HAL_HalfDuplex_Init(&huart6) != HAL_OK) Error_Handler();
+}
+
+static void MX_USART3_HDSEL_Init(void) {
+    __HAL_RCC_USART3_CLK_ENABLE();
+    GPIO_InitTypeDef gp = {0};
+    gp.Pin = GPIO_PIN_10; gp.Mode = GPIO_MODE_AF_OD; gp.Pull = GPIO_NOPULL;
+    gp.Speed = GPIO_SPEED_FREQ_VERY_HIGH; gp.Alternate = GPIO_AF7_USART3;
+    HAL_GPIO_Init(GPIOB, &gp);
+    huart3.Instance = USART3;
+    huart3.Init.BaudRate = 1000000; huart3.Init.WordLength = UART_WORDLENGTH_8B;
+    huart3.Init.StopBits = UART_STOPBITS_1; huart3.Init.Parity = UART_PARITY_NONE;
+    huart3.Init.Mode = UART_MODE_TX_RX; huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+    if (HAL_HalfDuplex_Init(&huart3) != HAL_OK) Error_Handler();
+}
+
+static void MX_UART5_HDSEL_Init(void) {
+    __HAL_RCC_UART5_CLK_ENABLE();
+    GPIO_InitTypeDef gp = {0};
+    gp.Pin = GPIO_PIN_12; gp.Mode = GPIO_MODE_AF_OD; gp.Pull = GPIO_NOPULL;
+    gp.Speed = GPIO_SPEED_FREQ_VERY_HIGH; gp.Alternate = GPIO_AF8_UART5;
+    HAL_GPIO_Init(GPIOC, &gp);
+    huart5.Instance = UART5;
+    huart5.Init.BaudRate = 1000000; huart5.Init.WordLength = UART_WORDLENGTH_8B;
+    huart5.Init.StopBits = UART_STOPBITS_1; huart5.Init.Parity = UART_PARITY_NONE;
+    huart5.Init.Mode = UART_MODE_TX_RX; huart5.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    huart5.Init.OverSampling = UART_OVERSAMPLING_16;
+    if (HAL_HalfDuplex_Init(&huart5) != HAL_OK) Error_Handler();
+}
+
+static void MX_USART2_Init(void) {
+    __HAL_RCC_USART2_CLK_ENABLE();
+    GPIO_InitTypeDef gp = {0};
+    gp.Pin = GPIO_PIN_2 | GPIO_PIN_3; gp.Mode = GPIO_MODE_AF_PP; gp.Pull = GPIO_NOPULL;
+    gp.Speed = GPIO_SPEED_FREQ_VERY_HIGH; gp.Alternate = GPIO_AF7_USART2;
+    HAL_GPIO_Init(GPIOA, &gp);
+    huart2.Instance = USART2;
+    huart2.Init.BaudRate = 115200; huart2.Init.WordLength = UART_WORDLENGTH_8B;
+    huart2.Init.StopBits = UART_STOPBITS_1; huart2.Init.Parity = UART_PARITY_NONE;
+    huart2.Init.Mode = UART_MODE_TX_RX; huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+    if (HAL_UART_Init(&huart2) != HAL_OK) Error_Handler();
+}
+
+void Error_Handler(void) {
+    __disable_irq();
+    while (1) {}
+}
+
+#ifdef USE_FULL_ASSERT
+void assert_failed(uint8_t *file, uint32_t line) {
+    (void)file; (void)line;
+}
+#endif

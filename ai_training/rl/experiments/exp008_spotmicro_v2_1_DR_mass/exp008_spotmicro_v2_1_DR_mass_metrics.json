@@ -1,0 +1,30 @@
+{
+  "exp_id": 8,
+  "run_name": "spotmicro_v2_1_DR_mass",
+  "purpose": "V2.0: 질량 랜덤화 적용하여 오차와 안정성을 유지하는지 확인",
+  "timestamp": "2026-04-27T11:32:34.587367",
+  "metrics": {
+    "timeout_pct": 100.0,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.06345146894454956,
+    "vel_error_y": 0.02042091079056263,
+    "ang_vel_error": 0.09288971871137619,
+    "torque_saturation_pct": 14.782092907092906,
+    "mean_height": 0.21923104205946903,
+    "height_std": 0.0017619029421179707,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.033878420339019215,
+    "mean_roll_deg": 1.033491849899292,
+    "mean_pitch_deg": 0.8582805395126343,
+    "max_roll_deg": 2.9484071731567383,
+    "max_pitch_deg": 3.8412559032440186,
+    "mean_action_rate": 0.0036902381107211113,
+    "max_action_rate": 0.250345915555954,
+    "mean_power": 8.216561317443848,
+    "power_std": 2.34688138961792,
+    "cost_of_transport": 1.4990749312007272,
+    "mean_episode_length": 1001.5,
+    "mean_episode_return": 71.39874869585037,
+    "num_episodes": 128
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "exp_id": 43,
+  "run_name": "spotmicro_v3_2_noise_order",
+  "purpose": "V5: v3.2 버전으로 롤백, 초기 모델",
+  "timestamp": "2026-05-11T10:37:02.852457",
+  "metrics": {
+    "timeout_pct": 97.70992366412213,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.04577194154262543,
+    "vel_error_y": 0.022634418681263924,
+    "ang_vel_error": 0.0840025544166565,
+    "torque_saturation_pct": 19.843697968697967,
+    "mean_height": 0.20633040676702868,
+    "height_std": 0.002287279169016544,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.024443276350475912,
+    "mean_roll_deg": 1.7482051849365234,
+    "mean_pitch_deg": 1.6885141134262085,
+    "max_roll_deg": 6.513797283172607,
+    "max_pitch_deg": 6.515608787536621,
+    "mean_action_rate": 0.0067084236070513725,
+    "max_action_rate": 1.4891053438186646,
+    "mean_power": 8.329960823059082,
+    "power_std": 2.5787265300750732,
+    "cost_of_transport": 1.9463578909458825,
+    "mean_episode_length": 980.2519083969465,
+    "mean_episode_return": 70.44353530061154,
+    "num_episodes": 131
+  }
+}

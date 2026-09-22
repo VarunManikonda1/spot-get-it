@@ -1,0 +1,30 @@
+{
+  "exp_id": 36,
+  "run_name": "spotmicro_v4_1_new_IK",
+  "purpose": "V4.1: IK를 2D에서 quasi-3D로 변경.",
+  "timestamp": "2026-05-04T12:48:24.768092",
+  "metrics": {
+    "timeout_pct": 98.46153846153847,
+    "early_death_pct": 0.7692307692307693,
+    "vel_error_x": 0.03234819695353508,
+    "vel_error_y": 0.020991293713450432,
+    "ang_vel_error": 0.06747526675462723,
+    "torque_saturation_pct": 24.700559856809857,
+    "mean_height": 0.21855427726205096,
+    "height_std": 0.0017370463215782893,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.01793768874317731,
+    "mean_roll_deg": 1.1941293478012085,
+    "mean_pitch_deg": 2.37400221824646,
+    "max_roll_deg": 5.124115467071533,
+    "max_pitch_deg": 6.492753982543945,
+    "mean_action_rate": 0.026141198351979256,
+    "max_action_rate": 0.5873854756355286,
+    "mean_power": 9.347467422485352,
+    "power_std": 1.7158281803131104,
+    "cost_of_transport": 2.040110137227976,
+    "mean_episode_length": 987.0076923076923,
+    "mean_episode_return": 52.144749849576215,
+    "num_episodes": 130
+  }
+}

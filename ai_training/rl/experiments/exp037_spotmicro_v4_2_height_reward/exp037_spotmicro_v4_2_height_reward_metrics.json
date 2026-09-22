@@ -1,0 +1,30 @@
+{
+  "exp_id": 37,
+  "run_name": "spotmicro_v4_2_height_reward",
+  "purpose": "V4.2: 높이 reward 추가하여 뒷다리 토크 문제 해결 시도",
+  "timestamp": "2026-05-04T13:42:16.618276",
+  "metrics": {
+    "timeout_pct": 90.78014184397163,
+    "early_death_pct": 2.8368794326241136,
+    "vel_error_x": 0.0318203940987587,
+    "vel_error_y": 0.019309982657432556,
+    "ang_vel_error": 0.06896975636482239,
+    "torque_saturation_pct": 22.3968305999556,
+    "mean_height": 0.2157814386652741,
+    "height_std": 0.001728914602931882,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.01720619508975478,
+    "mean_roll_deg": 1.2754309177398682,
+    "mean_pitch_deg": 3.024834632873535,
+    "max_roll_deg": 5.937713623046875,
+    "max_pitch_deg": 5.4838056564331055,
+    "mean_action_rate": 0.02642161026597023,
+    "max_action_rate": 0.6621658205986023,
+    "mean_power": 8.916094779968262,
+    "power_std": 1.7873759269714355,
+    "cost_of_transport": 1.9126357220749557,
+    "mean_episode_length": 917.5886524822695,
+    "mean_episode_return": 48.532673931713646,
+    "num_episodes": 141
+  }
+}

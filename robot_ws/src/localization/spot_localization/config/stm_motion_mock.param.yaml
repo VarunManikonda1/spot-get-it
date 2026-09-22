@@ -1,0 +1,13 @@
+stm_motion_mock_node:
+  ros__parameters:
+    stm_motion_topic: "/localization/stm_motion"
+
+    publish_rate_hz: 50.0
+
+    # Whole-body gait cycle frequency.
+    # 1.0 means one global gait cycle per second.
+    gait_cycle_hz: 1.0
+
+    # During TURN_LEFT mock state, yaw increases at this rate.
+    # pi/4 rad/s for 2 seconds gives about 90 degrees.
+    turn_yaw_rate_rad_s: 0.785398

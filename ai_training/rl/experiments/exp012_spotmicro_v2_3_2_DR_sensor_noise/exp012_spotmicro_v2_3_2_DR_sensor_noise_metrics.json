@@ -1,0 +1,30 @@
+{
+  "exp_id": 12,
+  "run_name": "spotmicro_v2_3_2_DR_sensor_noise",
+  "purpose": "V2.3.2: 각속도 추종 reward를 직선속도 추종 reward랑 비슷하게 조정, 오차 감소를 확인.",
+  "timestamp": "2026-04-27T15:08:15.734608",
+  "metrics": {
+    "timeout_pct": 100.0,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.05085860565304756,
+    "vel_error_y": 0.024858754128217697,
+    "ang_vel_error": 0.11684275418519974,
+    "torque_saturation_pct": 19.979586385836388,
+    "mean_height": 0.21694725424874992,
+    "height_std": 0.0018754187830252206,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.029367069743611734,
+    "mean_roll_deg": 2.1427979469299316,
+    "mean_pitch_deg": 1.5628836154937744,
+    "max_roll_deg": 5.785150051116943,
+    "max_pitch_deg": 5.453292369842529,
+    "mean_action_rate": 0.004577930551022291,
+    "max_action_rate": 0.2861619293689728,
+    "mean_power": 9.787220001220703,
+    "power_std": 2.944171667098999,
+    "cost_of_transport": 1.6383406707019823,
+    "mean_episode_length": 1001.5,
+    "mean_episode_return": 75.24540674686432,
+    "num_episodes": 128
+  }
+}

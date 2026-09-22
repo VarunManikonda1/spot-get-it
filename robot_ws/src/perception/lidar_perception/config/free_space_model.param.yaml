@@ -1,0 +1,209 @@
+# /**:
+#   ros__parameters:
+#     # ============================================================
+#     # Common sector range
+#     # - free_space_model_node와 free_space_marker_node가 함께 사용
+#     # - 튜닝 시 여기만 바꾸면 판단 로직과 시각화가 같이 바뀜
+#     # ============================================================
+
+#     front_min_deg: -20.0
+#     front_max_deg: 20.0
+
+#     left_min_deg: 20.0
+#     left_max_deg: 60.0
+
+#     right_min_deg: -60.0
+#     right_max_deg: -20.0
+
+#     # ============================================================
+#     # Common unknown threshold
+#     # - FreeSpaceModel 판단과 Marker 색상 기준을 맞추기 위해 공통화
+#     # ============================================================
+
+#     unknown_ratio_threshold: 0.60
+
+
+# free_space_model_node:
+#   ros__parameters:
+#     # ============================================================
+#     # Topic
+#     # ============================================================
+#     input_topic: "/perception/lidar/local_occupancy_grid"
+#     output_topic: "/perception/lidar/free_space_model"
+#     frame_id: "base_link"
+
+#     # ============================================================
+#     # OccupancyGrid cell values
+#     # ============================================================
+#     unknown_value: -1
+#     free_value: 0
+#     occupied_value: 100
+
+#     # ============================================================
+#     # Check range
+#     # ============================================================
+#     min_check_range: 0.20
+#     max_check_range: 2.50
+
+#     # ============================================================
+#     # Decision threshold
+#     # ============================================================
+#     occupied_ratio_threshold: 0.05
+#     min_clearance_threshold: 0.80
+#     free_ratio_threshold: 0.20
+
+
+# free_space_marker_node:
+#   ros__parameters:
+#     # ============================================================
+#     # Topic
+#     # ============================================================
+#     input_topic: "/perception/lidar/free_space_model"
+#     output_topic: "/perception/lidar/free_space_markers"
+#     frame_id: "base_link"
+
+#     # ============================================================
+#     # Marker direction angle
+#     # - 각 sector 중앙 방향에 arrow를 표시
+#     # - sector range와 별개로 표시용 방향만 지정
+#     # ============================================================
+
+#     front_angle_deg: 0.0
+#     left_angle_deg: 40.0
+#     right_angle_deg: -40.0
+
+#     # ============================================================
+#     # Marker display
+#     # ============================================================
+
+#     min_marker_length: 0.30
+#     max_marker_length: 2.00
+#     marker_z: 0.12
+#     text_z: 0.35
+#     text_size: 0.18
+#     boundary_length: 2.00
+#     marker_lifetime_sec: 0.50
+
+# free_space_marker_node:
+#   ros__parameters:
+#     input_topic: "/perception/lidar/free_space_model"
+#     output_topic: "/perception/lidar/free_space_markers"
+#     frame_id: "base_link"
+
+#     # Sector fill display
+#     sector_radius: 2.00
+#     sector_z: 0.08
+#     sector_segments: 12
+
+#     # Direction label display
+#     label_radius: 1.30
+#     label_z: 0.35
+#     label_text_size: 0.12
+
+#     # Summary state text display
+#     summary_x: 0.20
+#     summary_y: 0.00
+#     summary_z: 0.60
+#     summary_text_size: 0.12
+
+#     # Marker lifetime
+#     marker_lifetime_sec: 0.50
+
+free_space_model_node:
+  ros__parameters:
+    # ============================================================
+    # [1] Topic / Frame
+    # ============================================================
+    #input_topic: "/perception/lidar/local_occupancy_grid"
+    input_topic: "/perception/lidar/local_occupancy_grid_with_memory"
+    output_topic: "/perception/lidar/free_space_model"
+    frame_id: "base_link"
+
+    # ============================================================
+    # [2] OccupancyGrid Cell Value
+    # ------------------------------------------------------------
+    # local_occupancy_grid_node의 값과 반드시 일치해야 함
+    # unknown = -1, free = 0, occupied = 100
+    # ============================================================
+    unknown_value: -1
+    free_value: 0
+    occupied_value: 100
+
+    # ============================================================
+    # [3] LiDAR FOV / Angular Bin
+    # ------------------------------------------------------------
+    # CygLiDAR D1 수평 FOV 120도 기준
+    # base_link 기준:
+    #   x+ 전방 = 0 deg
+    #   y+ 좌측 = positive
+    #   y- 우측 = negative
+    #
+    # -60 ~ +60 deg를 5도 단위로 나누면 총 24개 bin
+    # ============================================================
+    fov_min_deg: -55.0
+    fov_max_deg: 55.0
+    angular_bin_size_deg: 5.0
+
+    # ============================================================
+    # [4] Analysis Range
+    # ------------------------------------------------------------
+    # FreeSpaceModel이 판단에 사용할 거리 범위
+    #
+    # min_check_range:
+    #   너무 가까운 로봇 본체/센서 근접 영역 제외
+    #
+    # max_check_range:
+    #   너무 먼 영역 제외
+    #   전처리 ROI의 roi_max_x 값과 동일하게 조정
+    # ============================================================
+    min_check_range: 0.20
+    max_check_range: 1.50
+
+    # ============================================================
+    # [5] Block / Gap Threshold
+    # ------------------------------------------------------------
+    # occupied_ratio_block_threshold: 0.03
+    #   bin 내부 occupied cell 비율이 이 값 이상이면 blocked
+    #
+    # min_clearance_block_threshold:
+    #   해당 bin에서 가장 가까운 occupied cell이 이 거리보다 가까우면 blocked
+    #
+    # min_gap_width_deg:
+    #   연속 candidate bin이 이 각도 폭보다 좁으면 gap 후보에서 제외
+    # ============================================================
+    occupied_ratio_block_threshold: 0.08
+    min_clearance_block_threshold: 0.40
+    min_gap_width_deg: 10.0
+
+    # ============================================================
+    # [6] Candidate / Risk Threshold
+    # ------------------------------------------------------------
+    # free_ratio_candidate_threshold:
+    #   현재 cpp 정책에서는 아직 직접 사용하지 않을 수 있음.
+    #   추후 candidate 조건을 더 엄격하게 만들 때 사용 가능.
+    #
+    # unknown_ratio_caution_threshold:
+    #   selected gap의 unknown 비율이 이 값 이상이면 RISK_CAUTION
+    # ============================================================
+    free_ratio_candidate_threshold: 0.10
+    unknown_ratio_caution_threshold: 0.60
+
+    # ============================================================
+    # [7] Score Weights
+    # ------------------------------------------------------------
+    # score =
+    #   free_weight      * free_ratio
+    # + unknown_weight   * unknown_ratio
+    # - occupied_weight  * occupied_ratio
+    # + clearance_weight * normalized_clearance
+    # - heading_bias_weight * normalized_heading_penalty
+    #
+    # unknown_weight를 0보다 크게 둔 이유:
+    #   local occupancy grid 특성상 장애물이 없어도 unknown이 많을 수 있으므로
+    #   unknown을 완전 blocked로 보지 않고 caution 후보로 남기기 위함
+    # ============================================================
+    free_weight: 1.0
+    unknown_weight: 0.3
+    occupied_weight: 2.0
+    clearance_weight: 0.8
+    heading_bias_weight: 0.2

@@ -1,0 +1,27 @@
+pose_path_event_sender:
+  ros__parameters:
+    # ── 로봇 목록 ─────────────────────────────────────────────────
+    # "robot_name:robot_id" 형식. robot_id는 BridgeDaemon PktHeader.robot_id (0-based)
+    robots:
+      - "spot_01:0"
+      - "spot_02:1"
+      - "spot_03:2"
+      - "spot_04:3"
+      - "spot_05:4"
+
+    # ── 네트워크 ─────────────────────────────────────────────────
+    rpi5_ip: "192.168.0.13"    # BridgeDaemon 수신 IP
+    bridge_port: 9000           # BridgeDaemon 수신 포트 (BRIDGE_PORT)
+
+    # ── 전송 주파수 ───────────────────────────────────────────────
+    # /localization/pose 가 빠르게 와도 이 Hz 이상 UDP로 보내지 않음
+    pose_send_hz: 10.0
+    # 마지막으로 수신한 global_path를 이 Hz로 UDP 재전송함
+    global_path_send_hz: 1.0
+
+    # ── 경로 입력 ─────────────────────────────────────────────────
+    global_path_topic_prefix: "/planning/global_path"
+    global_path_message_type: "robot_interfaces/msg/GlobalPathWaypoints"
+
+    # RobotStatus에서 bus_voltage를 받아 OdomPayload 뒤에 함께 실어 보낸다.
+    status_topic: "/control/actuator/status"

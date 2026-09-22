@@ -1,0 +1,30 @@
+{
+  "exp_id": 4,
+  "run_name": "spotmicro_v1_1_2_orientation_improve",
+  "purpose": "V1.1.2: 추종을 유지하며 줄 수 있는 페널티 수치 확인",
+  "timestamp": "2026-04-24T16:48:51.145674",
+  "metrics": {
+    "timeout_pct": 100.0,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.08709336817264557,
+    "vel_error_y": 0.020574402064085007,
+    "ang_vel_error": 0.08779294788837433,
+    "torque_saturation_pct": 12.664982586857587,
+    "mean_height": 0.21925541703458076,
+    "height_std": 0.001651187982337813,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.03275367013147792,
+    "mean_roll_deg": 0.9321458339691162,
+    "mean_pitch_deg": 0.9332594871520996,
+    "max_roll_deg": 3.663095235824585,
+    "max_pitch_deg": 3.2430896759033203,
+    "mean_action_rate": 0.0039540682919323444,
+    "max_action_rate": 0.5645570158958435,
+    "mean_power": 7.56022834777832,
+    "power_std": 2.619535446166992,
+    "cost_of_transport": 1.5662537512200045,
+    "mean_episode_length": 1001.5,
+    "mean_episode_return": 71.93294024467468,
+    "num_episodes": 128
+  }
+}

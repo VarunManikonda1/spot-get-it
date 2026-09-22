@@ -1,0 +1,30 @@
+{
+  "exp_id": 15,
+  "run_name": "spotmicro_v2_5_1_stand_still",
+  "purpose": "V2.5.1: gait 진행을 속도 비례로 수정, 정지 명령 때 trot 궤적 생성 중지, stand_still 가중치 페널티로 적용",
+  "timestamp": "2026-04-27T17:56:50.692847",
+  "metrics": {
+    "timeout_pct": 100.0,
+    "early_death_pct": 0.0,
+    "vel_error_x": 0.04186474531888962,
+    "vel_error_y": 0.019235746935009956,
+    "ang_vel_error": 0.12703905999660492,
+    "torque_saturation_pct": 12.430885087135087,
+    "mean_height": 0.21907152077217243,
+    "height_std": 0.0010126270920491481,
+    "height_target": 0.206,
+    "mean_vel_z_abs": 0.009525237506741793,
+    "mean_roll_deg": 1.6149662733078003,
+    "mean_pitch_deg": 0.9796706438064575,
+    "max_roll_deg": 3.746767520904541,
+    "max_pitch_deg": 4.170176982879639,
+    "mean_action_rate": 0.0024995096027851105,
+    "max_action_rate": 0.11164208501577377,
+    "mean_power": 6.497564792633057,
+    "power_std": 1.0211949348449707,
+    "cost_of_transport": 1.6881241458857976,
+    "mean_episode_length": 1001.5,
+    "mean_episode_return": 66.24615144729614,
+    "num_episodes": 128
+  }
+}
